@@ -1,168 +1,177 @@
 /* styles.css */
 
-@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css");
+/* Academicons: Google Scholar, ORCID and Dataverse icons in the profile links */
 @import url("https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css");
-
-/* Teaching section */
-.inst-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 8px;
-  margin-top: 1.2rem;
-}
-.inst-name {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #e0e0e0;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-}
-.inst-period {
-  font-size: 1rem;
-  color: #aaa;
-}
-.inst-card {
-  border: 3px solid #333;
-  border-radius: 6px;
-  padding: 10px 14px;
-  margin-bottom: 40px;
-}
-.role-badge {
-  display: inline-block;
-  font-size: 1rem;
-  color: #aaa;
-  border: 0.5px solid #aaa;
-  border-radius: 6px;
-  padding: 1px 8px;
-  margin-bottom: 10px;
-  margin-top: 4px;
-}
-.course-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-  font-size: 1rem;
-  color: #e0e0e0;
-  padding: 2px 0 2px 8px;
-  border-left: 1.5px solid #333;
-  margin-left: 2px;
-  margin-bottom: 10px;
-}
-.course-sem {
-  font-size: 1rem;
-  color: #aaa;
-  white-space: nowrap;
-}
+/* Body & UI: Source Sans 3 / headings & paper titles: Source Serif 4 */
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Source+Serif+4:opsz,wght@8..60,600&display=swap");
+/* Japanese: only the four glyphs of the name (工藤靖樹), fetched only where they appear */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&text=%E5%B7%A5%E8%97%A4%E9%9D%96%E6%A8%B9&display=swap");
 
 
-/* Icon-links & name-header */
-.icon-links {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-top: 1rem;
-  gap: 6px;
+/* ============================================================
+   Color tokens (design A: dark, warm neutrals, muted teal accent)
+   Every color used below comes from here. Contrast on --site-bg
+   meets WCAG AA (text 4.5:1, large text / icons / controls 3:1).
+   ============================================================ */
+:root {
+  /* Surfaces */
+  --site-bg: #18191b;
+  --navbar-bg: #222326;
+  --surface: #232428;          /* link-chip background */
+  --surface-hover: #2f3035;    /* link-chip background on hover */
+  --overlay-color: rgba(0, 0, 0, 0.5);  /* darkens the banner photo */
+
+  /* Text */
+  --site-fg: #e6e4df;          /* 13.9:1 */
+  --heading-fg: #d3d1cb;       /* 11.5:1, a step below body text as before */
+  --fg-strong: #ffffff;        /* current navbar link */
+  --fg-muted: #a9a7a1;         /* 7.3:1  secondary text: periods, semesters, profile links */
+  --fg-subtle: #8c8a84;        /* 5.1:1  tertiary: banner caption, author icons */
+
+  /* Lines */
+  --rule: #313337;             /* card borders, course-row rule */
+  --rule-soft: #28292d;        /* dividers inside a card */
+  --rule-dotted: #8a8883;      /* dotted underline of co-author links */
+  --border-hover: #66676b;     /* neutral link-chip border on hover */
+  --divider: #3a3c40;          /* section dividers (1px hairline) */
+  --focus-ring: var(--link-color);
+
+  /* Accent */
+  --link-color: #7dbdb3;       /* 8.2:1 */
+  --link-hover: #a3d6ce;       /* 11.3:1 */
+
+  /* Banner arrows: "<" ">" are text glyphs under 24px, so 4.5:1 */
+  --control: var(--fg-subtle);
+
+  /* Link-chip tints: base border / text / hover text */
+  --chip-amber-border: #cc9a52;  --chip-amber-text: #e0b876;  --chip-amber-hover: #f0cd96;
+  --chip-rose-border:  #b8737f;  --chip-rose-text:  #d9a0ad;  --chip-rose-hover:  #ebb6c1;
+  --chip-blue-border:  #6699cc;  --chip-blue-text:  #8fb8e0;  --chip-blue-hover:  #aecdf0;
+  --chip-teal-border:  color-mix(in srgb, var(--link-color) 55%, transparent);
+  --chip-slate-border: #6f7680;  --chip-slate-text: #b9bec6;
+  --chip-lime-border:  #8bc34a;  --chip-lime-text:  #aed581;  --chip-lime-hover:  #c5e1a5;
+
+  /* Type */
+  --font-sans: "Source Sans 3", "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+               "Yu Gothic", YuGothic, Meiryo, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Source Serif 4", "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", YuMincho,
+                Georgia, "Times New Roman", serif;
+  --measure: 68ch;             /* max line length of running text */
+
+  /* Publication list */
+  --pub-cover-w: 92px;         /* journal cover width (64px on phones) */
+  --cover-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 6px 16px rgba(0, 0, 0, 0.28);
+  --cover-edge: rgba(255, 255, 255, 0.07);  /* hairline around light covers */
+
+  /* Embedded map, darkened to match the theme */
+  --map-filter: invert(0.92) hue-rotate(180deg) saturate(0.7) contrast(1.1);
+
+  /* CV viewer */
+  --dialog-scrim: rgba(8, 9, 10, 0.72);
+  --dialog-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  --pdf-bg: #525659;           /* matches the PDF viewer's own grey */
+  --pdf-hint: #e6e4df;         /* 5.6:1 on --pdf-bg */
+
+  /* Hand the palette and type to Bootstrap as well */
+  --bs-body-font-family: var(--font-sans);
+  --bs-body-bg: var(--site-bg);
+  --bs-body-color: var(--site-fg);
+  --bs-link-color: var(--link-color);
 }
-.icon-links a {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  color: #aaa !important;
-  font-size: 1rem;
+
+
+/* ============================================================
+   Base
+   ============================================================ */
+html {
+  font-size: 18px !important;
+}
+
+html, body {
+  background-color: var(--site-bg) !important;
+  color: var(--site-fg) !important;
+}
+
+body {
+  font-family: var(--font-sans);
+  line-height: 1.65;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Running text: keep lines to a comfortable length */
+main .column p,
+main details > div {
+  max-width: var(--measure);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--heading-fg);
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+}
+/* Section headings in the left column (Publications, In Progress, Teaching) */
+.center-column h3 {
+  font-size: 1.6rem;
+  margin-top: 0;
+}
+/* Sub-headings in the profile (Interests, Education) */
+.column:not(.center-column) h3 {
+  font-size: 1.25rem;
+}
+
+a {
+  color: var(--link-color) !important;
   text-decoration: none;
-  white-space: nowrap;
-  transition: color 0.15s ease-in-out;
 }
-.icon-links a i,
-.icon-links a .ai {
-  color: #80cbc4 !important;
-  font-size: 1rem;
-  line-height: 2.1;
-  vertical-align: middle;
-  flex-shrink: 0;
-  width: 1.2rem;
-  text-align: center;
+a:hover {
+  color: var(--link-hover, var(--link-color)) !important;
 }
-.icon-links a:hover {
-  color: #e0e0e0 !important;
+/* Links inside running text: underline on hover */
+main .column p a:hover,
+main li a:not(.coauthor-link):hover,
+footer a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
 }
 
-/* In Progress section */
-.progress-section-title {
-  font-size: 1rem;
-  color: #e0e0e0;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  margin-bottom: 8px;
-  margin-top: 1rem;
+/* Keyboard focus: a visible ring; nothing on mouse or touch */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+.navbar-toggler:focus-visible {
+  outline: 2px solid var(--focus-ring) !important;
+  outline-offset: 3px;
+  border-radius: 3px;
+  box-shadow: none !important;
 }
-.progress-card {
-  border: 3px solid #333;
-  border-radius: 6px;
-  padding: 10px 14px;
-  margin-bottom: 40px;
-  margin-top: 1px;
-}
-.other-projects-list {
-  border: 3px solid #333;
-  border-radius: 6px;
-  padding: 4px 14px;
-}
-.other-project-row {
-  font-size: 1rem;
-  color: #e0e0e0;
-  padding: 8px 0;
-  border-bottom: 0.5px solid #2a2a2a;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.other-project-row:last-child {
-  border-bottom: none;
-}
-.other-project-authors {
-  font-size: 1rem;
-  color: #555;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 5px;
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible),
+summary:focus:not(:focus-visible),
+.navbar-toggler:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none !important;
 }
 
-  
-.status {
-  display: inline-block;
-  font-size: 0.7rem;
-  border-radius: 0.35rem;
-  padding: 0.15em 0.6em;
-  margin-bottom: 6px;
-  border: 0.5px solid;
-}
-.status.submitted {
-  color: #aaa;
-  border-color: #aaa;
-}
-.coauth {
-  font-size: 1rem;
-  color: #e0e0e0;
-  margin-top: 1px;
+
+/* ============================================================
+   Navbar
+   ============================================================ */
+.navbar {
+  min-height: 3rem !important;
+  padding-top: 0.2rem !important;
+  padding-bottom: 0.2rem !important;
+  background-color: var(--navbar-bg) !important;
+  position: sticky !important;
+  top: 0;
+  z-index: 1050;
 }
 
-/* Reduce vertical space and align large logo */
-.navbar-logo {
-  height: 2.2rem;                /* Large logo */
-  vertical-align: middle;
-  margin-top: -0.3rem;           /* Nudge it upward */
-  margin-bottom: -0.3rem;        /* Pull it tighter from below */
-  padding: 0 !important;         /* Remove internal space */
-  line-height: 1 !important;
-  position: relative;
-  top: 1px;                      /* Fine adjustment */
-}
-
-/* Remove padding in navbar brand container */
 .navbar-brand {
   padding-top: 0rem !important;
   padding-bottom: 0rem !important;
@@ -170,140 +179,6 @@
   align-items: center;
 }
 
-/* If needed: shrink navbar height overall */
-.navbar {
-  min-height: 2.5rem !important;
-  padding-top: 0.2rem !important;
-  padding-bottom: 0.2rem !important;
-}
-
-/* Make main content area wider */
-.main-content {
-  max-width: 1400px;  /* Default is ~900px — try 1100–1400px */
-  margin: 0 auto;
-}
-
-/* Hide title and subtitle text on banner */
-.quarto-title-banner .title,
-.quarto-title-banner .subtitle {
-  display: none;
-}
-
-#banner-controls {
-  text-align: center;
-  margin-top: -2rem;
-  margin-bottom: 1.5rem;
-  z-index: 2;
-  position: relative;
-}
-
-.banner-arrow {
-  background-color: transparent;
-  border: 0px solid #444;
-  color: #444;
-  font-size: 1.3rem;
-  padding: -0.5rem 0.1rem;
-  margin: 0 1.1rem;
-  border-radius: 0.1rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-}
-
-.banner-arrow:hover {
-  background-color: #444;
-  color: white;
-}
-
-@media (max-width: 600px) {
-
-  /* Keep your original padding rule */
-  .quarto-page {
-    padding: 0 1rem;
-  }
-
-  /* Stack columns vertically */
-  .columns {
-    flex-direction: column !important;
-  }
-
-  .column {
-    width: 100% !important;
-    margin-bottom: 1.5rem;
-  }
-
-  /* Buttons and links should shrink nicely 
-  .flat-button {
-    font-size: 0.85rem !important;
-    padding: 0.4em 0.8em !important;
-    white-space: normal;
-  }  */
-
-  .icon-links i {
-    font-size: 1.4rem;
-  }
-
-  .name-header {
-    font-size: 1.6rem !important;
-  }
-
-  /* Ensure long text and links wrap */
-  summary, p, li, div {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
-
-  /* Fix images overflowing on mobile */
-  img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  /* Prevent overlap from long captions or titles */
-  .quarto-title-banner {
-    background-size: cover;
-    background-position: center;
-  }
-}
-
-/* Let pointer events through the banner’s ::before overlay */
-.quarto-title-banner::before {
-  pointer-events: none !important;
-}
-
-
-/* Dark theme custom colors */
-:root {
-  --site-bg: #1e1e1e;
-  --site-fg: #e0e0e0;
-  --navbar-bg: #2a2a2a;
-  --footer-bg: #2a2a2a;
-  --link-color: #80cbc4;
-  --overlay-color: rgba(0, 0, 0, 0.5);
-}
-
-/* Global font size */
-html {
-  font-size: 20px !important;
-}
-
-/* Apply custom background & text colors */
-html, body, .site-body, .quarto-page {
-  background-color: var(--site-bg) !important;
-  color: var(--site-fg) !important;
-}
-
-/* Navbar styling */
-.navbar, .site-navbar {
-  padding-top: 0.2rem !important;
-  padding-bottom: 0.2rem !important;
-  min-height: 3rem !important;
-  background-color: var(--navbar-bg) !important;
-  position: sticky !important;
-  top: 0;
-  z-index: 1050;
-}
-
-/* Reduce font size and spacing in navbar */
 .navbar-nav .nav-link {
   font-size: 0.9rem !important;
   padding-top: 0.2rem !important;
@@ -311,230 +186,103 @@ html, body, .site-body, .quarto-page {
   line-height: 2.5 !important;
 }
 
-/* Remove underline from links */
-a {
-  text-decoration: none;
+
+/* ---- Option A: frosted navbar ----
+   The page shows through the fixed navbar, softly blurred. At 85% the
+   links keep 4.5:1 even over the brightest text. Browsers without
+   backdrop-filter keep the solid bar. */
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .navbar {
+    background-color: color-mix(in srgb, var(--navbar-bg) 85%, transparent) !important;
+    -webkit-backdrop-filter: saturate(140%) blur(12px);
+    backdrop-filter: saturate(140%) blur(12px);
+    border-bottom: 1px solid color-mix(in srgb, var(--fg-strong) 7%, transparent);
+  }
+  /* the opened mobile menu stays solid, so its links read cleanly */
+  .navbar-collapse.show,
+  .navbar-collapse.collapsing {
+    background-color: var(--navbar-bg);
+    margin: 0 -0.75rem;
+    padding: 0 0.75rem 0.5rem;
+  }
 }
 
-/* Link colors and hover */
-a, .site-navbar a, .site-footer a {
-  color: var(--link-color) !important;
-}
-a:hover, .site-navbar a:hover, .site-footer a:hover {
-  opacity: 0.8 !important;
-}
-
-/* Footer styling */
-.site-footer {
-  background-color: var(--footer-bg) !important;
-}
-footer {
-  position: relative;
-  bottom: 0;
-  width: 100%;
-  padding: 1rem 0;
-}
-
-/* Full-width titled line */
-.full-width-titled-line {
+/* ------------------------------------------------------------
+   Navbar brand: logo + name in the serif (title / logo in _quarto.yml),
+   with a hairline before the section links on desktop.
+   ------------------------------------------------------------ */
+.navbar-brand-container {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin: 2rem 0 1rem 0;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #ccc;
+  gap: 0.65rem;
+  margin-right: 1.4rem;
 }
-.full-width-titled-line::before,
-.full-width-titled-line::after {
-  content: "";
-  flex-grow: 1;
-  border-top: 1px solid #ccc;
-  margin: 0 1rem;
-}
-
-/* Publications list styling */
-#publications ul {
-  list-style: none !important;
-  padding: 0 !important;
-}
-#publications li::before {
-  content: "•" !important;
-  color: var(--link-color) !important;
-  display: inline-block !important;
-  width: 1em !important;
-}
-
-/* Content max-width */
-.quarto-page {
-  max-width: 800px !important;
-  margin: auto !important;
-}
-
-/* Center-column vertical alignment */
-.center-column {
+.navbar .navbar-brand {
+  margin: 0;
+  padding: 0;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;   /* 追加: 子要素(block要素)を横方向に中央寄せ */
-  text-align: center;    /* 追加: テキスト自体も中央寄せ */
-}
-
-/* Icon-links & name-header */
-.name-header {
-  font-size: 2rem;
-  font-weight: bold;
-  text-align: center;
-}
-.icon-links {
-  display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 2rem;
-  margin-top: 1rem;
 }
-/* remove the old invert filter so we can see real color */
-.icon-links i,
-.icon-links svg,
-.icon-links img {
-  filter: none !important;
-}
-/* force icon font (mask) and SVG fill into link-color */
-.icon-links i,
-.icon-links a svg {
-  color: var(--link-color) !important;
-}
-.icon-links svg {
-  fill: var(--link-color) !important;
-}
-.icon-links i,
-.icon-links img {
-  font-size: 1.95rem;
-  width: 2rem;
+.navbar .navbar-logo {
   height: 2rem;
+  max-height: none;
+  width: auto;
+  padding: 0;
 }
-
-/* Publication entries */
-.pub-entry {
-  margin-bottom: 1.5rem;
-}
-.pub-title {
-  font-size: 1rem;
-  font-weight: 500;
-  line-height: 1.4;
-}
-.pub-links {
-  margin-top: 0.3rem;
-  font-size: 0.95rem;
-}
-.pub-links a {
-  margin-right: 1rem;
-  text-decoration: none;
-  color: var(--link-color);
-}
-.pub-links a:hover {
-  opacity: 0.8;
-}
-
-/* Flat-button styling — code-chip look */
-.flat-button {
-  display: inline-block;
-  background-color: #2b2b2b;
-  color: #e0e0e0;
-  padding: 0.15em 0.6em;
-  font-size: 0.7rem;
-  /*font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; */
-  text-decoration: none;
-  margin-right: 0.4rem;
-  margin-bottom: 0.3rem;
-  border: 0.5px solid #80cbc4;
-  border-radius: 0.35rem;
-  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
-  text-transform: none;
-  letter-spacing: 0;
-  font-weight: 400;
-}
-.flat-button:hover {
-  background-color: #3a3a3a;
-  border-color: #666;
-  color: #fff;
-}
-
-.flat-button-blue {
-  border-color: #6699cc;
-  color: #8fb8e0 !important;
-}
-.flat-button-blue:hover {
-  background-color: #3a3a3a;
-  border-color: #8fb8e0;
-  color: #aecdf0 !important;
-}
-
-.flat-button-amber {
-  border-color: #cc9a52;
-  color: #e0b876 !important;
-}
-.flat-button-amber:hover {
-  background-color: #3a3a3a;
-  border-color: #e0b876;
-  color: #f0cd96 !important;
-}
-
-.flat-button-rose {
-  border-color: #b56b7a;
-  color: #d18b9a !important;
-}
-.flat-button-rose:hover {
-  background-color: #3a3a3a;
-  border-color: #d18b9a;
-  color: #e6a9b6 !important;
-}
-
-.flat-button-lime {
-  border-color: #8bc34a;
-  color: #aed581 !important;
-}
-.flat-button-lime:hover {
-  background-color: #3a3a3a;
-  border-color: #aed581;
-  color: #c5e1a5 !important;
-}
-
-/* Co-author links — color-only, underline on hover */
-.coauthor-link {
-  color: #e0e0e0 !important;
-  text-decoration: none;
-  border-bottom: 1px dotted #888;
-  transition: border-color 0.15s ease-in-out, color 0.15s ease-in-out;
-}
-.coauthor-link:hover {
-  color: #80cbc4 !important;
-  border-bottom-color: #80cbc4;
-}
-
-/* Details summary toggles */
-details summary {
-  cursor: pointer;
-  font-weight: 500;
-  margin-top: 0.7rem;
-}
-details summary::after {
-  content: " +";
+.navbar .navbar-title {
+  font-family: var(--font-serif);
   font-size: 1.2rem;
-  font-weight: bold;
-  margin-left: 0.5rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1;
+  color: var(--site-fg);
+  white-space: nowrap;
 }
-details[open] summary::after {
-  content: " −";
+.navbar .navbar-brand:hover .navbar-title {
+  color: var(--fg-strong);
 }
-summary {
-  list-style: none;
-}
-summary::-webkit-details-marker {
-  display: none;
+/* Desktop: a hairline between the brand and the section links */
+@media (min-width: 992px) {
+  .navbar-brand-container {
+    padding-right: 1.4rem;
+    border-right: 1px solid var(--rule);
+  }
 }
 
-/* Banner keyframes for 20 images */
+
+
+/* ============================================================
+   Banner (photo carousel)
+   ============================================================ */
+header#title-block-header {
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+
+header#title-block-header .quarto-title-banner {
+  background-image: url('header_images/header1.jpg');
+  position: relative !important;
+  height: 55vh !important;
+  background-size: cover !important;
+  background-position: center !important;
+  transition: background-image 0.8s ease-in-out;
+  background-color: var(--site-bg); /* avoid white flashes while photos load */
+}
+header#title-block-header .quarto-title-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--overlay-color) !important;
+  z-index: 1 !important;
+  pointer-events: none !important; /* let clicks through to the banner */
+}
+
+/* Photo list for the carousel. The script at the end of index.qmd loads
+   header_images/header2.jpg ... header20.jpg at run time, which Quarto cannot
+   see; these url()s are what make Quarto copy all 20 photos into _site/, under
+   these exact lowercase names (several source files end in .JPG, and GitHub
+   Pages is case-sensitive). The animation itself is never applied.
+   Do not remove. */
 @keyframes rotateBanner {
   0%,   5%   { background-image: url('header_images/header1.jpg'); }
   5%,   10%  { background-image: url('header_images/header2.jpg'); }
@@ -558,29 +306,1520 @@ summary::-webkit-details-marker {
   95%,  100% { background-image: url('header_images/header20.jpg'); }
 }
 
-/* Banner element styling */
-header#title-block-header .quarto-title-banner {
-  background-image: url('header_images/header1.jpg');
-  position: relative !important;
-  height: 55vh !important;
-  background-size: cover !important;
-  background-position: center !important;
-  
-  transition: background-image 0.8s ease-in-out; /* Adds the fade timing [cite: 85, 87] */
-  background-color: #1e1e1e; /* Match site bg to prevent white flashes during load */
-}
-header#title-block-header .quarto-title-banner::before {
+/* ---- Option G: banner fades into the page ----
+   A gradient at the foot of the photo blends it into the background,
+   instead of ending on a hard edge. */
+header#title-block-header .quarto-title-banner::after {
   content: "";
   position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40%;
+  background: linear-gradient(to bottom, transparent, var(--site-bg));
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* The banner needs a title to render; hide it */
+.quarto-title-banner .title {
+  display: none;
+}
+
+#banner-controls {
+  text-align: center;
+  margin-top: -2rem;
+  margin-bottom: 1.5rem;
+  z-index: 2;
+  position: relative;
+}
+
+.banner-arrow {
+  background-color: transparent;
+  border: 0px solid var(--control);
+  color: var(--control);
+  font-size: 1.3rem;
+  margin: 0 1.1rem;
+  border-radius: 0.1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+.banner-arrow:hover {
+  background-color: var(--surface-hover);
+  color: var(--fg-strong);
+}
+
+
+/* ============================================================
+   Layout helpers
+   ============================================================ */
+.center-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+
+/* ---- Option F: section headings ----
+   A short teal rule above Publications / In Progress / Teaching; on wide
+   screens the heading stays in view while its section scrolls past. */
+.center-column > section > h3::before {
+  content: "";
+  display: block;
+  width: 1.75rem;
+  height: 2px;
+  margin: 0 auto 0.75rem;
+  border-radius: 1px;
+  background-color: var(--link-color);
+}
+@media (min-width: 992px) {
+  /* section rows become flex so the left column spans the whole row */
+  main div.columns:has(> .column.center-column > section) {
+    display: flex;
+  }
+  main div.columns:has(> .column.center-column > section) > .column {
+    flex: none;
+  }
+  .center-column > section {
+    position: sticky;
+    top: calc(var(--nav-h, 3.5rem) + 1.5rem);
+  }
+}
+
+/* ============================================================
+   Profile: name & icon links
+   ============================================================ */
+.name-header {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--site-fg);
+  text-align: center;
+}
+
+.icon-links {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+.icon-links a {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  color: var(--fg-muted) !important;
+  font-size: 1rem;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s ease-in-out;
+}
+.icon-links a:hover {
+  color: var(--site-fg) !important;
+  text-decoration: none !important;
+}
+.icon-links a i,
+.icon-links a .ai {
+  color: var(--link-color) !important;
+  font-size: 1rem;
+  line-height: 2.1;
+  vertical-align: middle;
+  flex-shrink: 0;
+  width: 1.2rem;
+  height: 2rem;
+  text-align: center;
+  filter: none !important;
+}
+
+
+/* ---- Option C: name & title ----
+   Larger name, a short teal rule under it, and the position set in
+   small spaced capitals. */
+.name-header {
+  font-size: 2.35rem;
+  letter-spacing: -0.015em;
+}
+.name-header::after {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 2px;
+  margin: 0.75rem auto 0.6rem;
+  border-radius: 1px;
+  background-color: var(--link-color);
+}
+.name-header + div em {
+  font-style: normal;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+@media (max-width: 600px) {
+  .name-header {
+    font-size: 2rem !important;
+  }
+}
+
+/* ------------------------------------------------------------
+   Interests & Education (.facts): interests as tags, education as a
+   vertical timeline.
+   ------------------------------------------------------------ */
+.facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem 2.5rem;
+  margin-top: 2.2rem;
+}
+.facts-block > h3,
+.facts-block > section > h3 {
+  margin: 0 0 0.9rem;
+}
+.facts ul,
+.facts ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.edu-degree,
+.edu-inst {
+  display: block;
+}
+.edu-degree {
+  color: var(--site-fg);
+}
+.edu-inst {
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+}
+@media (max-width: 767.98px) {
+  .facts {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.8rem;
+  }
+}
+
+/* Interests: a list divided by hairlines, each item marked with a small
+   dot (no order implied). From 992px the list stretches to the height of
+   the Education timeline beside it, so the two columns end near the same
+   line. */
+.facts .interest-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.facts .interest-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.55rem 0;
+  font-size: 1.02rem;
+  color: var(--site-fg);
+  border-bottom: 1px solid var(--rule);
+}
+.facts .interest-list li:first-child {
+  border-top: 1px solid var(--rule);
+}
+.facts .interest-list li::before {
+  content: "";
+  flex: none;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--fg-subtle);
+}
+@media (min-width: 992px) {
+  .facts {
+    align-items: stretch;
+  }
+  .facts-interests {
+    display: flex;
+    flex-direction: column;
+  }
+  .facts .interest-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .facts .interest-list li {
+    flex: 1;
+    max-height: 4.5rem;
+  }
+}
+
+.facts .edu-list {
+  position: relative;
+  padding-left: 1.5rem;
+}
+.facts .edu-list::before {             /* the line */
+  content: "";
+  position: absolute;
+  left: 0.36rem;
+  top: 0.55rem;
+  bottom: 0.55rem;
+  width: 2px;
+  background-color: var(--divider);
+}
+.facts .edu-list li {
+  position: relative;
+  padding-bottom: 1rem;
+}
+.facts .edu-list li:last-child {
+  padding-bottom: 0;
+}
+.facts .edu-list li::before {          /* the dots */
+  content: "";
+  position: absolute;
+  left: -1.5rem;
+  top: 0.42rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  background-color: var(--site-bg);
+  border: 2px solid var(--link-color);
+}
+/* Education: the university first (serif), degree and year below in
+   muted text (order via flexbox; the markup lists the degree first) */
+.facts .edu-list li {
+  display: flex;
+  flex-direction: column;
+}
+.facts .edu-inst {
+  order: -1;
+  font-family: var(--font-serif);
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--site-fg);
+}
+.facts .edu-degree {
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+}
+.facts .edu-list li::before {
+  top: 0.45rem;
+}
+
+/* Current enrolment: a filled dot, and "expected 2027" as a small tag */
+.facts .edu-list li.edu-current::before {
+  background-color: var(--link-color);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--link-color) 22%, transparent);
+}
+.edu-expected {
+  display: inline-block;
+  margin-left: 0.15em;
+  padding: 0 0.5em;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.6;
+  vertical-align: 0.08em;
+  color: var(--link-color);
+  border: 1px solid color-mix(in srgb, var(--link-color) 50%, transparent);
+  border-radius: 999px;
+}
+.facts .edu-list .bi {
+  display: none;
+}
+
+
+
+
+/* ------------------------------------------------------------
+   Profile on narrower windows (<= 991px): the two columns stack, and the
+   text column becomes a centered reading column (text stays left-aligned).
+   Interests and Education stack inside it.
+   ------------------------------------------------------------ */
+@media (max-width: 991.98px) {
+  main div.columns:has(> .column > .name-header) > .column {
+    display: block;
+    width: 100% !important;
+  }
+  main div.columns:has(> .column > .name-header) > .column:not(.center-column) {
+    max-width: 34rem;
+    margin: 2rem auto 0;
+  }
+  main div.columns:has(> .column > .name-header) .facts {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.8rem;
+  }
+}
+
+/* ------------------------------------------------------------
+   CV button (under the name and title) and the CV viewer overlay
+   (see cv-viewer.js)
+   ------------------------------------------------------------ */
+.cv-button-wrap {
+  text-align: center;
+  margin-top: 1.1rem;
+}
+.cv-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.45rem 1.05rem;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--link-color) !important;
+  text-decoration: none !important;
+  border: 1px solid var(--link-color);
+  border-radius: 999px;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+.cv-button:hover {
+  color: var(--link-hover) !important;
+  background-color: color-mix(in srgb, var(--link-color) 14%, transparent);
+}
+.cv-button .bi {
+  font-size: 1.05em;
+}
+.cv-button:focus-visible {
+  border-radius: 999px;      /* the focus ring follows the pill shape */
+}
+
+/* Page behind the open viewer does not scroll */
+html.cv-open {
+  overflow: hidden;
+}
+
+.cv-dialog {
+  width: min(960px, 92vw);
+  height: 88vh;
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background-color: var(--surface);
+  color: var(--site-fg);
+  box-shadow: var(--dialog-shadow);
+  overflow: hidden;
+}
+.cv-dialog:focus {
+  outline: none;
+}
+.cv-dialog::backdrop {
+  background-color: var(--dialog-scrim);
+}
+.cv-dialog__panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.cv-dialog__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.75rem 0.55rem 1rem;
+  border-bottom: 1px solid var(--rule);
+}
+.cv-dialog__title {
+  margin: 0 auto 0 0;
+  padding: 0;
+  border: 0;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.cv-dialog__action,
+.cv-dialog__close {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.25rem 0.7rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--site-fg) !important;
+  text-decoration: none !important;
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+.cv-dialog__action:hover,
+.cv-dialog__close:hover {
+  color: var(--fg-strong) !important;
+  background-color: var(--surface-hover);
+  border-color: var(--fg-subtle);
+}
+.cv-dialog__close {
+  padding: 0.25rem 0.5rem;
+}
+/* The PDF sits on top of a hint. Where the browser shows PDFs inline the
+   hint is hidden behind the document; where it does not (the PDF would be
+   downloaded instead), the hint points to Download / New tab. */
+.cv-dialog__body {
+  position: relative;
+  flex: 1;
+  background-color: var(--pdf-bg);
+}
+.cv-dialog__hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
+  padding: 0 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--pdf-hint);
+}
+.cv-dialog__frame {
+  position: absolute;
   inset: 0;
-  background-color: var(--overlay-color) !important;
-  z-index: 1 !important;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
 }
-header#title-block-header .quarto-title-block-title,
-header#title-block-header .quarto-title-block-subtitle {
-  display: none !important;
+
+@media (prefers-reduced-motion: no-preference) {
+  .cv-dialog[open] {
+    animation: cv-dialog-in 0.18s ease-out;
+  }
+  .cv-dialog[open]::backdrop {
+    animation: cv-backdrop-in 0.18s ease-out;
+  }
 }
-header#title-block-header {
-  padding: 0 !important;
-  min-height: 0 !important;
+@keyframes cv-dialog-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.985); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes cv-backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+
+/* ============================================================
+   Publications
+   ============================================================ */
+/* Co-author links: text color, dotted underline, accent on hover */
+.coauthor-link {
+  color: var(--site-fg) !important;
+  text-decoration: none;
+  border-bottom: 1px dotted var(--rule-dotted);
+  transition: border-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+.coauthor-link:hover {
+  color: var(--link-color) !important;
+  border-bottom-color: var(--link-color);
+}
+
+/* Abstract toggles (title = summary) */
+details summary {
+  cursor: pointer;
+  font-weight: 500;
+  margin-top: 0.7rem;
+  line-height: 1.4;
+}
+/* Paper titles: serif, set in the same weight as the headings */
+details summary strong,
+details summary > span {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  letter-spacing: -0.003em;
+}
+/* Abstract text */
+main details > div {
+  line-height: 1.6;
+}
+details summary::after {
+  content: " +";
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-left: 0.5rem;
+}
+details[open] summary::after {
+  content: " −";
+}
+summary {
+  list-style: none;
+}
+summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Link chips (Online Appendix, Replication, ...) */
+.flat-button {
+  display: inline-block;
+  background-color: var(--surface);
+  color: var(--site-fg);
+  padding: 0.15em 0.6em;
+  font-size: 0.7rem;
+  text-decoration: none;
+  margin-right: 0.4rem;
+  margin-bottom: 0.3rem;
+  border: 0.5px solid var(--link-color);
+  border-radius: 0.35rem;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+.flat-button:hover {
+  background-color: var(--surface-hover);
+  border-color: var(--border-hover);
+  color: var(--fg-strong);
+}
+
+.flat-button-amber       { border-color: var(--chip-amber-border); color: var(--chip-amber-text) !important; }
+.flat-button-amber:hover { border-color: var(--chip-amber-text);   color: var(--chip-amber-hover) !important; }
+.flat-button-rose        { border-color: var(--chip-rose-border);  color: var(--chip-rose-text) !important; }
+.flat-button-rose:hover  { border-color: var(--chip-rose-text);    color: var(--chip-rose-hover) !important; }
+.flat-button-blue        { border-color: var(--chip-blue-border);  color: var(--chip-blue-text) !important; }
+.flat-button-blue:hover  { border-color: var(--chip-blue-text);    color: var(--chip-blue-hover) !important; }
+.flat-button-lime        { border-color: var(--chip-lime-border);  color: var(--chip-lime-text) !important; }
+.flat-button-lime:hover  { border-color: var(--chip-lime-text);    color: var(--chip-lime-hover) !important; }
+.flat-button-slate       { border-color: var(--chip-slate-border); color: var(--chip-slate-text) !important; }
+.flat-button-slate:hover { border-color: var(--chip-slate-text);   color: var(--site-fg) !important; }
+
+
+/* ------------------------------------------------------------
+   Publication list layout (CSS only; the markup in index.qmd is unchanged)
+   One publication = one .columns row inside the Publications column:
+   a text column (80%) with title/abstract, meta list and link chips,
+   and a cover column (15%).
+   ------------------------------------------------------------ */
+
+/* Rows: hairline between publications instead of spacer divs */
+div.columns:has(> .column > #publications) > .column > div.columns {
+  padding: 1.5rem 0;
+}
+div.columns:has(> .column > #publications) > .column > div.columns:first-child {
+  padding-top: 0;
+}
+div.columns:has(> .column > #publications) > .column > div.columns ~ div.columns {
+  border-top: 1px solid var(--rule);
+}
+div.columns:has(> .column > #publications) > .column > div[style^="margin-top: 0.5rem"],
+div.columns:has(> .column > #publications) > .column > div.columns > .column > div[style^="margin-top: -0.5rem"] {
+  display: none;
+}
+
+/* Title: the largest thing in each entry; still the DOI link */
+div.columns:has(> .column > #publications) details > summary {
+  margin-top: 0;
+  font-size: 1.1rem !important;
+  line-height: 1.35;
+}
+div.columns:has(> .column > #publications) details > summary a,
+.progress-card details > summary > span {
+  color: var(--site-fg) !important;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: color 0.15s ease-in-out, text-decoration-color 0.15s ease-in-out;
+}
+div.columns:has(> .column > #publications) details > summary a:hover {
+  color: var(--link-color) !important;
+  text-decoration-color: currentColor;
+  opacity: 1 !important;
+}
+
+/* The "+" after the title becomes a small "Abstract" toggle label */
+div.columns:has(> .column > #publications) details > summary::after,
+.progress-card details > summary::after {
+  content: "Abstract \25BE";
+  display: inline-block;
+  vertical-align: 0.2em;
+  margin-left: 0.6rem;
+  padding: 0.05em 0.55em;
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--fg-muted);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  transition: color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+div.columns:has(> .column > #publications) details[open] > summary::after,
+.progress-card details[open] > summary::after {
+  content: "Abstract \25B4";
+  color: var(--site-fg);
+  border-color: var(--fg-subtle);
+}
+div.columns:has(> .column > #publications) details > summary:hover::after,
+.progress-card details > summary:hover::after {
+  color: var(--site-fg);
+  border-color: var(--fg-subtle);
+}
+
+/* Abstract text: set off with a rule, kept to the reading measure */
+div.columns:has(> .column > #publications) details > div,
+.progress-card details > div {
+  margin: 0.7rem 0 0.9rem !important;
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--rule);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+div.columns:has(> .column > #publications) details > div p:last-child {
+  margin-bottom: 0;
+}
+
+/* Meta: authors on the first line, then "Journal, volume (date)" in muted text */
+div.columns:has(> .column > #publications) .column > ul {
+  margin: 0.45rem 0 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+div.columns:has(> .column > #publications) .column > ul i.bi {
+  display: none;
+}
+div.columns:has(> .column > #publications) .column > ul li:first-child {
+  color: var(--site-fg);
+}
+div.columns:has(> .column > #publications) .column > ul li:nth-child(n+2) {
+  display: inline;
+  color: var(--fg-muted);
+}
+/* Date in parentheses, citation style. inline-flex keeps "(date)" in one
+   piece and drops the whitespace the hidden icon leaves inside the <li>. */
+div.columns:has(> .column > #publications) .column > ul li:nth-child(3) {
+  display: inline-flex;
+  white-space: nowrap;
+}
+div.columns:has(> .column > #publications) .column > ul li:nth-child(3)::before {
+  content: "(";
+}
+div.columns:has(> .column > #publications) .column > ul li:nth-child(3)::after {
+  content: ")";
+}
+
+/* Link chips: one even row */
+div.columns:has(> .column > #publications) .column > p:has(> .flat-button) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+}
+div.columns:has(> .column > #publications) .flat-button {
+  margin: 0;
+  padding: 0.2em 0.65em;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  border-width: 1px;
+}
+
+/* Covers: same width, top-aligned with the title. Their own proportions
+   are kept (0.67-0.77): any common crop would cut titles that run to the
+   edge of a cover. */
+div.columns:has(> .column > #publications) .center-column > p {
+  margin: 0;
+}
+div.columns:has(> .column > #publications) .center-column img {
+  width: 100% !important;
+  max-width: var(--pub-cover-w);
+  height: auto;
+  margin: 0.2rem 0 0 auto !important;
+  border-radius: 3px !important;
+  box-shadow: var(--cover-shadow) !important;
+  outline: 1px solid var(--cover-edge);
+  outline-offset: -1px;
+}
+
+/* Co-author names: keep the dotted underline off the spaces inside the links */
+.coauthor-link {
+  display: inline-block;
+}
+
+/* ---- Option D: publication hover ----
+   On devices with a pointer, the entry under it gets a faint panel and
+   its cover lifts slightly. The panel is drawn with a spread shadow, so
+   nothing in the layout moves. */
+@media (hover: hover) {
+  div.columns:has(> .column > #publications) > .column > div.columns {
+    border-radius: 6px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  div.columns:has(> .column > #publications) > .column > div.columns:hover {
+    background-color: var(--surface);
+    box-shadow: 0 0 0 0.9rem var(--surface);
+  }
+  div.columns:has(> .column > #publications) > .column > div.columns .center-column img {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  div.columns:has(> .column > #publications) > .column > div.columns:hover .center-column img {
+    transform: translateY(-3px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35), 0 10px 22px rgba(0, 0, 0, 0.35) !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  div.columns:has(> .column > #publications) > .column > div.columns,
+  div.columns:has(> .column > #publications) > .column > div.columns .center-column img {
+    transition: none;
+  }
+  div.columns:has(> .column > #publications) > .column > div.columns:hover .center-column img {
+    transform: none;
+  }
+}
+
+/* ============================================================
+   In Progress
+   ============================================================ */
+/* Small uppercase labels, shared with the institution names in Teaching */
+.progress-section-title,
+.inst-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+.progress-section-title {
+  margin: 0 0 0.6rem;
+}
+.progress-card + .progress-section-title {
+  margin-top: 2.2rem;
+}
+
+/* Cards: hairline border on a slightly raised surface */
+.progress-card,
+.other-projects-list,
+.inst-card {
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background-color: var(--surface);
+}
+.progress-card {
+  padding: 1rem 1.2rem;
+}
+.other-projects-list {
+  padding: 0.2rem 1.2rem;
+}
+.other-project-row {
+  font-size: 0.98rem;
+  color: var(--site-fg);
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule-soft);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.other-project-row:last-child {
+  border-bottom: none;
+}
+.other-project-authors {
+  font-size: 1rem;
+  color: var(--fg-subtle);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.status {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  border-radius: 4px;
+  padding: 0.1em 0.65em;
+  margin-top: 0.3rem;
+  border: 1px solid;
+}
+.status.submitted {
+  color: var(--fg-muted);
+  border-color: var(--fg-muted);
+}
+.coauth {
+  font-size: 0.95rem;
+  color: var(--site-fg);
+  margin-top: 0.45rem;
+}
+/* Author icon hidden, as in the publication list */
+.coauth i.bi {
+  display: none;
+}
+
+
+/* ============================================================
+   Teaching
+   ============================================================ */
+.inst-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin: 0 0 0.6rem;
+}
+.inst-card + .inst-title {
+  margin-top: 2.2rem;
+}
+.inst-period {
+  font-size: 0.85rem;
+  color: var(--fg-muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.inst-card {
+  padding: 0.9rem 1.2rem 0.3rem;
+}
+.role-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  color: var(--fg-muted);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 0.1em 0.65em;
+  margin: 0.1rem 0 0.6rem;
+}
+.inst-card .course-row + .role-badge {
+  margin-top: 0.7rem;
+}
+.course-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  font-size: 0.98rem;
+  color: var(--site-fg);
+  padding: 0.05rem 0 0.05rem 0.75rem;
+  border-left: 2px solid var(--rule);
+  margin: 0 0 0.6rem 2px;
+}
+.course-sem {
+  font-size: 0.85rem;
+  color: var(--fg-muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* ------------------------------------------------------------
+   In Progress & Teaching, second pass.
+   In Progress: status badge. Teaching: a timeline per university with
+   course-code labels and instructor / TA roles.
+   ------------------------------------------------------------ */
+
+/* Status badge with a dot */
+.in-progress .status.submitted {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  color: var(--chip-amber-text);
+  border-color: color-mix(in srgb, var(--chip-amber-text) 45%, transparent);
+  background-color: color-mix(in srgb, var(--chip-amber-text) 8%, transparent);
+}
+.status-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+.status-line {
+  margin-top: 0.6rem;
+}
+.other-project-authors .bi {
+  color: var(--fg-subtle);
+}
+
+/* Course codes and roles */
+.course-sep {                               /* kept for copy / screen readers */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.course-title {
+  display: inline;
+}
+.role-group + .role-group {
+  margin-top: 0.8rem;
+}
+/* Roles are the only teal in Teaching: both outlined the same way */
+.teaching .role-badge {
+  color: var(--link-color);
+  border-color: var(--chip-teal-border);
+  background-color: transparent;
+}
+
+/* Teaching: one timeline node per university, course codes as labels */
+.teaching {
+  position: relative;
+  padding-left: 1.6rem;
+}
+.teaching::before {
+  content: "";
+  position: absolute;
+  left: 0.36rem;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 2px;
+  background-color: var(--divider);
+}
+.teaching .teach-inst {
+  position: relative;
+}
+.teaching .teach-inst + .teach-inst {
+  margin-top: 2rem;
+}
+.teaching .teach-inst::before {
+  content: "";
+  position: absolute;
+  left: -1.6rem;
+  top: 0.3rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  background-color: var(--site-bg);
+  border: 2px solid var(--fg-subtle);
+}
+.teaching .teach-inst:first-child::before {
+  background-color: var(--fg-muted);
+  border-color: var(--fg-muted);
+}
+.teaching .course-code {
+  display: inline-block;
+  margin-right: 0.55em;
+  padding: 0.02em 0.45em;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  vertical-align: 0.1em;
+  color: var(--fg-muted);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* ------------------------------------------------------------
+   Data & Measures: dataset cards. Two outlined actions, told apart by
+   their icons: Download (download icon) and Explore (arrow).
+   ------------------------------------------------------------ */
+.dataset-card {
+  padding: 1.2rem 1.35rem 1.25rem;
+  background-color: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+}
+.dataset-kicker {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--link-color);
+}
+.dataset-title {
+  margin: 0.2rem 0 0.35rem;
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--site-fg);
+}
+.dataset-paper {
+  margin: 0 0 0.7rem;
+  font-size: 0.92rem;
+  color: var(--fg-muted);
+}
+.dataset-desc {
+  margin: 0 0 1.05rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.dataset-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.data-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.45rem 1rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  text-decoration: none !important;
+  border-radius: 6px;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+/* Both are outlined; the icon tells them apart (download vs arrow) */
+.data-btn-download {
+  color: var(--site-fg) !important;
+  background-color: transparent;
+  border: 1px solid var(--fg-subtle);
+}
+.data-btn-download:hover {
+  color: var(--fg-strong) !important;
+  border-color: var(--site-fg);
+  background-color: var(--surface-hover);
+}
+/* Explore looks exactly like Download; the arrow tells them apart */
+.data-btn-explore {
+  color: var(--site-fg) !important;
+  background-color: transparent;
+  border: 1px solid var(--fg-subtle);
+}
+.data-btn-explore:hover {
+  color: var(--fg-strong) !important;
+  border-color: var(--site-fg);
+  background-color: var(--surface-hover);
+}
+.data-btn .bi-arrow-right {
+  transition: transform 0.15s ease-in-out;
+}
+.data-btn-explore:hover .bi-arrow-right {
+  transform: translateX(2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .data-btn-explore:hover .bi-arrow-right {
+    transform: none;
+  }
+}
+
+
+/* ------------------------------------------------------------
+   Contact: email, mailing address and a link to Google Maps beside an
+   embedded map (no API key). The map is darkened with a CSS filter to sit
+   in the dark theme: invert the lightness, turn hues back with
+   hue-rotate, and soften it.
+   ------------------------------------------------------------ */
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+.contact-item + .contact-item {
+  margin-top: 1.1rem;
+}
+.contact-label {
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  margin-bottom: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.contact-label .bi {
+  color: var(--link-color);
+}
+.contact address {
+  margin: 0;
+  font-style: normal;
+  line-height: 1.6;
+}
+.contact-maplink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  margin-top: 1.3rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.contact-maplink .bi-box-arrow-up-right {
+  font-size: 0.75em;
+}
+.contact-map {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background-color: var(--surface);
+}
+.contact-map iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  filter: var(--map-filter);
+}
+@media (max-width: 767.98px) {
+  .contact {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .contact-map {
+    aspect-ratio: 16 / 11;
+  }
+}
+
+
+/* ============================================================
+   Inline colors in index.qmd, mapped onto the tokens
+   (index.qmd is left as is, so its inline style="" colors are
+   matched by value and overridden here)
+   ============================================================ */
+main [style*="color: #aaa"] {            /* icons, institutions, abstracts, footer */
+  color: var(--fg-muted) !important;
+}
+main [style*="color:#555"] {             /* author icons in Other Projects */
+  color: var(--fg-subtle) !important;
+}
+main [style*="color: #80cbc4"] {         /* working-paper title */
+  color: var(--link-color) !important;
+}
+main [style*="color: #484848"] {         /* banner photo caption */
+  color: var(--fg-subtle) !important;
+}
+main hr[style*="#444"] {                 /* section dividers and the footer rule: 1px hairlines */
+  border: 0 !important;
+  border-top: 1px solid var(--divider) !important;
+  opacity: 1;
+}
+
+
+/* ============================================================
+   Footer
+   ============================================================ */
+footer {
+  position: relative;
+  width: 100%;
+  padding: 1rem 0;
+}
+
+
+/* ============================================================
+   Scrollspy & in-page navigation (see scrollspy.js)
+   ============================================================ */
+
+/* Quarto renders div.columns as `display: initial` (= inline), which gives
+   each section row a one-line box. Make rows real blocks so their position
+   can be measured; the columns inside stay inline-block, so the layout
+   does not change. */
+main div.columns {
+  display: block;
+}
+
+/* Keep anchor targets clear of the fixed navbar.
+   --nav-h is the measured navbar height, set by scrollspy.js. */
+main div.columns,
+main [id] {
+  scroll-margin-top: calc(var(--nav-h, 3.5rem) + 1rem);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* The navbar link of the section currently in view */
+.navbar .nav-link.is-current {
+  color: var(--fg-strong) !important;
+  opacity: 1 !important;
+}
+.navbar .nav-link[href*="#"] .menu-text {
+  padding-bottom: 0.15rem;
+  border-bottom: 2px solid transparent;
+}
+.navbar .nav-link.is-current .menu-text {
+  border-bottom-color: var(--link-color);
+}
+
+
+/* ---- Option B: animated nav indicator ----
+   The underline of the current section grows in from the left; hovering
+   a link previews it faintly. Instant with reduced motion. */
+.navbar .nav-link[href*="#"] .menu-text {
+  position: relative;
+  border-bottom-color: transparent !important;
+}
+.navbar .nav-link[href*="#"] .menu-text::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  border-radius: 1px;
+  background-color: var(--link-color);
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0;
+  transition: transform 0.28s ease, opacity 0.28s ease;
+}
+.navbar .nav-link[href*="#"]:hover .menu-text::after {
+  transform: scaleX(1);
+  opacity: 0.35;
+}
+.navbar .nav-link.is-current .menu-text::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .navbar .nav-link[href*="#"] .menu-text::after {
+    transition: none;
+  }
+}
+
+/* ============================================================
+   Mobile
+   ============================================================ */
+@media (max-width: 600px) {
+  html {
+    font-size: 17px !important;
+  }
+
+  /* Stack the columns */
+  .column {
+    width: 100% !important;
+    margin-bottom: 1.5rem;
+  }
+
+  .name-header {
+    font-size: 1.6rem !important;
+  }
+
+  /* Let long titles and links wrap */
+  summary, p, li, div {
+    overflow-wrap: break-word;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Teaching: semesters under the course name, period under the institution,
+     instead of squeezing the names into a narrow column */
+  .inst-title,
+  .course-row {
+    flex-direction: column;
+    gap: 0.05rem;
+  }
+
+  /* Footer: keep "mountains - text - mountains" on one row; the text
+     wraps between the (smaller) images instead of pushing one below */
+  footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+  footer img {
+    height: 3.4rem !important;
+    margin: 0 !important;
+    flex: 0 0 auto;
+  }
+
+  /* Publications: cover as a small thumbnail beside the text */
+  div.columns:has(> .column > #publications) > .column > div.columns {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+  }
+  div.columns:has(> .column > #publications) > .column > div.columns > .column {
+    margin-bottom: 0;
+  }
+  div.columns:has(> .column > #publications) > .column > div.columns > .column:first-child {
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto !important;
+  }
+  div.columns:has(> .column > #publications) > .column > div.columns > .column.center-column {
+    flex: 0 0 64px;
+    width: 64px !important;
+  }
+  div.columns:has(> .column > #publications) .center-column img {
+    max-width: 64px;
+    margin: 0.25rem 0 0 !important;
+  }
+
+  /* Banner caption: on narrow screens its right-aligned line runs into
+     the centered arrows, so center it just below them instead */
+  main [style*="color: #484848"] {
+    margin-top: -1.1rem !important;
+    text-align: center !important;
+  }
+}
+
+
+/* ---- Option E: fade-in on scroll ----
+   Entries rise 12px and fade in as they enter the viewport, driven by
+   scroll position alone (CSS scroll-driven animations, no JavaScript).
+   Browsers without support, and reduced motion, show everything as is. */
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    div.columns:has(> .column > #publications) > .column > div.columns,
+    .progress-card,
+    .other-projects-list,
+    .inst-card {
+      animation: reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+}
+
+
+/* ============================================================
+   Refinement pass (one block, so it can be reverted as a unit).
+   Same dark theme and teal accent; finer materials and rhythm:
+   1. Borders are translucent white, so an edge reads the same on the
+      page and on raised surfaces
+   2. Raised surfaces (cards, tiles, the map) get a faint top light,
+      a 1px inner highlight and a soft, low shadow
+   3. One corner radius for cards (10px) and one for small controls (6px)
+   4. Section dividers fade out at both ends; a little more air around them
+   5. Navbar: translucent hairline underneath
+   6. Native scrollbars / form controls follow the dark theme; text
+      selection uses the teal
+   7. Link chips carry a whisper of their own colour
+   8. Journal covers: slightly deeper, softer shadow
+   ============================================================ */
+:root {
+  --rule: rgba(255, 255, 255, 0.075);
+  --rule-soft: rgba(255, 255, 255, 0.05);
+  --divider: rgba(255, 255, 255, 0.11);
+  --radius-card: 10px;
+  --radius-control: 6px;
+  --surface-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0) 58%);
+  --surface-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 1px 2px rgba(0, 0, 0, 0.28), 0 10px 26px -14px rgba(0, 0, 0, 0.55);
+  color-scheme: dark;
+  scrollbar-color: #3a3c41 var(--site-bg);
+}
+
+::selection {
+  color: var(--fg-strong);
+  background-color: color-mix(in srgb, var(--link-color) 38%, transparent);
+}
+
+/* 2-3. Raised surfaces */
+.progress-card,
+.other-projects-list,
+.inst-card,
+.dataset-card,
+.contact-map {
+  background-image: var(--surface-sheen);
+  box-shadow: var(--surface-shadow);
+}
+.progress-card,
+.other-projects-list,
+.inst-card,
+.dataset-card,
+.contact-map {
+  border-radius: var(--radius-card);
+}
+.data-btn,
+.cv-dialog__action,
+.cv-dialog__close {
+  border-radius: var(--radius-control);
+}
+
+/* 4. Dividers that fade at the ends, with more room around them */
+main hr[style*="#444"] {
+  height: 1px;
+  border-top: 0 !important;
+  background-image: linear-gradient(90deg, transparent, var(--divider) 18%, var(--divider) 82%, transparent);
+  margin: 4.25rem 0 !important;
+}
+
+/* 5. Navbar hairline */
+.navbar {
+  box-shadow: 0 1px 0 var(--rule);
+}
+
+/* 7. Chips: a faint wash of their own colour */
+.flat-button {
+  background-color: color-mix(in srgb, currentColor 5%, transparent);
+}
+.flat-button:hover {
+  background-color: color-mix(in srgb, currentColor 11%, transparent);
+}
+
+/* 8. Covers */
+div.columns:has(> .column > #publications) .center-column img {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 28px -10px rgba(0, 0, 0, 0.6) !important;
+}
+
+
+/* ============================================================
+   Colour rule: where teal appears
+   Teal marks what is interactive or current, and nothing else:
+     1. links inside running text (biography, contact)
+     2. hover on paper titles, co-author names and the profile links
+        (Email, Scholar, ORCID, OSF, Dataverse, X: icon and label)
+     3. the current state: navbar underline, the current Education entry,
+        keyboard focus ring, text selection
+     4. the one primary action: the CV button
+     5. Teaching role tags (Solo Instructor / Teaching Assistant)
+     6. two small accent rules: under the name and above section headings
+   Everything else (icons, labels, secondary buttons, timeline dots,
+   navbar links at rest) is neutral.
+   ============================================================ */
+/* Navbar links at rest: neutral; hover light; current white + teal underline */
+.navbar .nav-link[href*="#"] {
+  color: var(--fg-muted) !important;
+}
+.navbar .nav-link[href*="#"]:hover {
+  color: var(--site-fg) !important;
+}
+/* Icons in the profile list and in Contact: neutral */
+.icon-links a i,
+.icon-links a .ai,
+.contact-label .bi {
+  color: var(--fg-muted) !important;
+}
+.icon-links a:hover,
+.icon-links a:hover i,
+.icon-links a:hover .ai {
+  color: var(--link-color) !important;
+}
+/* Labels */
+.dataset-kicker {
+  color: var(--fg-muted);
+}
+/* Education: open dots and the "expected" tag neutral; the current dot stays teal */
+.facts .edu-list li::before {
+  border-color: var(--fg-subtle);
+}
+.facts .edu-list li.edu-current::before {
+  border-color: var(--link-color);
+}
+.edu-expected {
+  color: var(--fg-muted);
+  border-color: var(--rule);
+}
+/* Paper title in the dataset card: same as the publication titles */
+.dataset-paper a {
+  color: var(--site-fg) !important;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: color 0.15s ease-in-out, text-decoration-color 0.15s ease-in-out;
+}
+.dataset-paper a:hover {
+  color: var(--link-color) !important;
+  text-decoration-color: currentColor;
 }
