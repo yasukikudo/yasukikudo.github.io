@@ -136,8 +136,11 @@ main .column p span[lang="ja"] {
   font-size: 0.92em;
 }
 
-/* Running text: keep lines to a comfortable length */
-main .column p,
+/* Running text: keep lines to a comfortable length. Not in the centred
+   columns (profile, section headings, covers): Pandoc wraps the position
+   and the CV button in <p>, and a 68ch cap there, left-aligned in a wider
+   column (stacked layout, about 662-991px), pulled them off the centre. */
+main .column:not(.center-column) p,
 main .abstract {
   max-width: var(--measure);
 }
@@ -1158,18 +1161,9 @@ div.columns:has(> .column > #publications) .column > ul li:nth-child(n+2) {
   display: inline;
   color: var(--fg-muted);
 }
-/* Date in parentheses, citation style. inline-flex keeps "(date)" in one
-   piece and drops the whitespace the hidden icon leaves inside the <li>. */
-div.columns:has(> .column > #publications) .column > ul li:nth-child(3) {
-  display: inline-flex;
-  white-space: nowrap;
-}
-div.columns:has(> .column > #publications) .column > ul li:nth-child(3)::before {
-  content: "(";
-}
-div.columns:has(> .column > #publications) .column > ul li:nth-child(3)::after {
-  content: ")";
-}
+/* The date item (third line of the list) now holds only the year, for
+   screen readers (.pub-y is clipped): the year shows in the year column and
+   the journal line ends with volume and issue. */
 
 /* Link chips: one even row */
 div.columns:has(> .column > #publications) .column > p:has(> .flat-button) {
@@ -1230,16 +1224,17 @@ div.columns:has(> .column > #publications) .center-column img {
 /* ------------------------------------------------------------
    Year column: the year of each paper sits in a narrow column to the left
    of the entry, shown on the first paper of each year only (the rows carry
-   .pub, and data-year on those first rows). The year leaves the date line,
-   which keeps volume, issue and month; for screen readers the year stays
-   in the date (.pub-y is visually hidden) and the column is decoration.
+   .pub, and data-year on those first rows). The journal line ends with
+   volume and issue (no month, no year); for screen readers every paper
+   keeps its year in the list (.pub-y, visually hidden), and the column is
+   decoration.
    The other sections below the profile start at the same left edge, with
    the year column left empty.
    ------------------------------------------------------------ */
 :root {
   --year-col: 4.5rem;
 }
-.pub-y {                          /* in the date line: read, not shown */
+.pub-y {                          /* the year in the list: read, not shown */
   position: absolute;
   width: 1px;
   height: 1px;
