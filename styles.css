@@ -1,38 +1,54 @@
 /* styles.css */
 
-/* Academicons: Google Scholar, ORCID and Dataverse icons in the profile links */
-@import url("https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css");
-/* Body & UI: Source Sans 3 / headings & paper titles: Source Serif 4 */
-@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Source+Serif+4:opsz,wght@8..60,600&display=swap");
-/* Japanese: only the four glyphs of the name (工藤靖樹), fetched only where they appear */
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&text=%E5%B7%A5%E8%97%A4%E9%9D%96%E6%A8%B9&display=swap");
+/* Web fonts and the Academicons icon font are loaded in head-links.html. */
+
+/* Metric-matched fallbacks: until the web fonts arrive the text is set in
+   Arial / Georgia scaled to the same width and line metrics, so it does
+   not reflow when they swap in (layout shift on a slow connection, 1280px: 0.146 -> 0.053).
+   Measured: Source Sans 3 is 92.8% as wide as Arial, Source Serif 4 about
+   92% of Georgia; ascent/descent from the fonts' own metrics. */
+@font-face {
+  font-family: "Source Sans 3 Fallback";
+  src: local("Arial"), local("ArialMT");
+  size-adjust: 92.8%;
+  ascent-override: 109.9%;
+  descent-override: 43.1%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Source Serif 4 Fallback";
+  src: local("Georgia");
+  font-weight: 300 700;
+  size-adjust: 92%;
+  ascent-override: 113%;
+  descent-override: 37%;
+  line-gap-override: 0%;
+}
 
 
 /* ============================================================
-   Color tokens (design A: dark, warm neutrals, muted teal accent)
+   Color tokens (dark, cool neutrals like the snow photographs, muted
+   teal accent)
    Every color used below comes from here. Contrast on --site-bg
    meets WCAG AA (text 4.5:1, large text / icons / controls 3:1).
    ============================================================ */
 :root {
   /* Surfaces */
-  --site-bg: #18191b;
-  --navbar-bg: #222326;
-  --surface: #232428;          /* link-chip background */
-  --surface-hover: #2f3035;    /* link-chip background on hover */
+  --site-bg: #16181a;
+  --navbar-bg: #1f2124;
+  --surface: #202226;          /* raised surfaces: dataset card, map, CV viewer */
+  --surface-hover: #2b2e32;
   --overlay-color: rgba(0, 0, 0, 0.5);  /* darkens the banner photo */
 
   /* Text */
-  --site-fg: #e6e4df;          /* 13.9:1 */
-  --heading-fg: #d3d1cb;       /* 11.5:1, a step below body text as before */
+  --site-fg: #e4e6e7;          /* 13.8:1 */
+  --heading-fg: #e4e6e7;       /* the serif headings are set at 500, so as light as the text */
   --fg-strong: #ffffff;        /* current navbar link */
-  --fg-muted: #a9a7a1;         /* 7.3:1  secondary text: periods, semesters, profile links */
-  --fg-subtle: #8c8a84;        /* 5.1:1  tertiary: banner caption, author icons */
+  --fg-muted: #a3a7ab;         /* 7.3:1  secondary text: periods, semesters, profile links */
+  --fg-subtle: #868a8f;        /* 5.1:1  tertiary: banner caption, years, author icons */
 
   /* Lines */
-  --rule: #313337;             /* card borders, course-row rule */
-  --rule-soft: #28292d;        /* dividers inside a card */
-  --rule-dotted: #8a8883;      /* dotted underline of co-author links */
-  --border-hover: #66676b;     /* neutral link-chip border on hover */
+  --rule: #313337;             /* hairlines (redefined translucent in the Refinement pass) */
   --divider: #3a3c40;          /* section dividers (1px hairline) */
   --focus-ring: var(--link-color);
 
@@ -40,28 +56,41 @@
   --link-color: #7dbdb3;       /* 8.2:1 */
   --link-hover: #a3d6ce;       /* 11.3:1 */
 
-  /* Banner arrows: "<" ">" are text glyphs under 24px, so 4.5:1 */
-  --control: var(--fg-subtle);
+  /* Banner arrows: round glass buttons on the photo */
+  --control-fg: rgba(255, 255, 255, 0.88);
+  --control-fg-hover: #ffffff;
+  --control-bg: rgba(18, 19, 21, 0.3);
+  --control-bg-hover: rgba(18, 19, 21, 0.55);
+  --control-border: rgba(255, 255, 255, 0.16);
+  --control-border-hover: rgba(255, 255, 255, 0.32);
 
-  /* Link-chip tints: base border / text / hover text */
-  --chip-amber-border: #cc9a52;  --chip-amber-text: #e0b876;  --chip-amber-hover: #f0cd96;
-  --chip-rose-border:  #b8737f;  --chip-rose-text:  #d9a0ad;  --chip-rose-hover:  #ebb6c1;
-  --chip-blue-border:  #6699cc;  --chip-blue-text:  #8fb8e0;  --chip-blue-hover:  #aecdf0;
-  --chip-teal-border:  color-mix(in srgb, var(--link-color) 55%, transparent);
-  --chip-slate-border: #6f7680;  --chip-slate-text: #b9bec6;
-  --chip-lime-border:  #8bc34a;  --chip-lime-text:  #aed581;  --chip-lime-hover:  #c5e1a5;
+  /* Buttons (publication links, Abstract, dataset actions, status tag):
+     grey at rest, teal on hover and keyboard focus */
+  --btn-fg: var(--fg-muted);   /* 7.3:1 */
+  --btn-border: #62666b;       /* 3.1:1 */
+  --btn-hover-bg: color-mix(in srgb, var(--link-color) 10%, transparent);
+  --chip-teal-border:  color-mix(in srgb, var(--link-color) 55%, transparent);  /* Teaching role tags */
 
   /* Type */
-  --font-sans: "Source Sans 3", "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+  --font-sans: "Source Sans 3", "Source Sans 3 Fallback", "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN",
                "Yu Gothic", YuGothic, Meiryo, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-serif: "Source Serif 4", "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", YuMincho,
+  --font-serif: "Source Serif 4", "Source Serif 4 Fallback", "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", YuMincho,
                 Georgia, "Times New Roman", serif;
   --measure: 68ch;             /* max line length of running text */
+  /* Type sizes keep to one scale (html is 18px, 17px on phones):
+     0.7rem  labels in capitals, tags, caption, publication links
+     0.8rem  periods, semesters, the position under the name
+     0.9rem  meta lines, abstracts, dataset text, buttons
+     1rem    body text, lists
+     1.1rem  paper and dataset titles, sub-headings, navbar name
+     1.6rem  section headings
+     2.35rem the name
+     (the Abstract pill stays at 0.62rem: in spaced capitals it reads as
+     large as 0.7rem lowercase) */
 
   /* Publication list */
   --pub-cover-w: 92px;         /* journal cover width (64px on phones) */
-  --cover-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 6px 16px rgba(0, 0, 0, 0.28);
-  --cover-edge: rgba(255, 255, 255, 0.07);  /* hairline around light covers */
+  --cover-edge: rgba(255, 255, 255, 0.1);   /* hairline around the covers (no shadow) */
 
   /* Embedded map, darkened to match the theme */
   --map-filter: invert(0.92) hue-rotate(180deg) saturate(0.7) contrast(1.1);
@@ -69,8 +98,6 @@
   /* CV viewer */
   --dialog-scrim: rgba(8, 9, 10, 0.72);
   --dialog-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  --pdf-bg: #525659;           /* matches the PDF viewer's own grey */
-  --pdf-hint: #e6e4df;         /* 5.6:1 on --pdf-bg */
 
   /* Hand the palette and type to Bootstrap as well */
   --bs-body-font-family: var(--font-sans);
@@ -101,27 +128,47 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* The Japanese name inside the English bio ("Yasuki Kudo (工藤靖樹) is"):
+   kanji fill the whole em box and are denser than Latin letters, so at the
+   same size they look larger and darker. 0.92em matches them to the
+   capitals around them. */
+main .column p span[lang="ja"] {
+  font-size: 0.92em;
+}
+
 /* Running text: keep lines to a comfortable length */
 main .column p,
-main details > div {
+main .abstract {
   max-width: var(--measure);
 }
 
 h1, h2, h3, h4, h5, h6 {
   color: var(--heading-fg);
   font-family: var(--font-serif);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.25;
   letter-spacing: -0.005em;
 }
+/* Heading levels: the name is the page's h1, sections are h2. Quarto's
+   default h1/h2 margins, rule and padding are reset so the look matches
+   the earlier design. */
+#quarto-document-content h1.name-header {
+  margin: 0;
+}
+#quarto-content #quarto-document-content h2 {   /* beats Quarto's "#quarto-content section:first-of-type h2:first-of-type" */
+  margin-top: 0;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
 /* Section headings in the left column (Publications, In Progress, Teaching) */
-.center-column h3 {
+.center-column h2 {
+  margin-bottom: 0.5rem;
   font-size: 1.6rem;
   margin-top: 0;
 }
 /* Sub-headings in the profile (Interests, Education) */
-.column:not(.center-column) h3 {
-  font-size: 1.25rem;
+.column:not(.center-column) h2 {
+  font-size: 1.1rem;
 }
 
 a {
@@ -143,7 +190,6 @@ footer a:hover {
 /* Keyboard focus: a visible ring; nothing on mouse or touch */
 a:focus-visible,
 button:focus-visible,
-summary:focus-visible,
 .navbar-toggler:focus-visible {
   outline: 2px solid var(--focus-ring) !important;
   outline-offset: 3px;
@@ -152,7 +198,6 @@ summary:focus-visible,
 }
 a:focus:not(:focus-visible),
 button:focus:not(:focus-visible),
-summary:focus:not(:focus-visible),
 .navbar-toggler:focus:not(:focus-visible) {
   outline: none;
   box-shadow: none !important;
@@ -209,7 +254,7 @@ summary:focus:not(:focus-visible),
 
 /* ------------------------------------------------------------
    Navbar brand: logo + name in the serif (title / logo in _quarto.yml),
-   with a hairline before the section links on desktop.
+   with space before the section links on desktop.
    ------------------------------------------------------------ */
 .navbar-brand-container {
   display: flex;
@@ -222,6 +267,7 @@ summary:focus:not(:focus-visible),
   padding: 0;
   display: flex;
   align-items: center;
+  gap: 0.65rem;              /* logo and name share one link (navbar-brand.js) */
 }
 .navbar .navbar-logo {
   height: 2rem;
@@ -231,8 +277,8 @@ summary:focus:not(:focus-visible),
 }
 .navbar .navbar-title {
   font-family: var(--font-serif);
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 500;
   letter-spacing: -0.005em;
   line-height: 1;
   color: var(--site-fg);
@@ -241,11 +287,22 @@ summary:focus:not(:focus-visible),
 .navbar .navbar-brand:hover .navbar-title {
   color: var(--fg-strong);
 }
-/* Desktop: a hairline between the brand and the section links */
+/* Phones: Quarto caps the brand at (100% - 115px) and clips it; the name
+   fits beside the menu button even at 280px, so let it take its width */
+@media (max-width: 991.98px) {
+  .navbar-brand-container {
+    max-width: none;
+    flex-shrink: 0;
+  }
+  .navbar .navbar-brand {
+    overflow: visible;
+  }
+}
+/* Desktop: space (no rule) between the brand and the section links
+   (padding: Quarto forces the margin to 0) */
 @media (min-width: 992px) {
   .navbar-brand-container {
-    padding-right: 1.4rem;
-    border-right: 1px solid var(--rule);
+    padding-right: 1.7rem;
   }
 }
 
@@ -259,14 +316,22 @@ header#title-block-header {
   min-height: 0 !important;
 }
 
+/* Banner photos: banner/<1280|1920|2560>/headerN.webp, copied to _site by
+   'resources: banner/' in _quarto.yml. banner-head.html picks the size for
+   the screen and sets --banner-initial; the fallback is the 1920 version. */
 header#title-block-header .quarto-title-banner {
-  background-image: url('header_images/header1.jpg');
+  background-image: var(--banner-initial, url('banner/1920/header1.webp'));
   position: relative !important;
   height: 55vh !important;
   background-size: cover !important;
   background-position: center !important;
   transition: background-image 0.8s ease-in-out;
   background-color: var(--site-bg); /* avoid white flashes while photos load */
+}
+@media (prefers-reduced-motion: reduce) {
+  header#title-block-header .quarto-title-banner {
+    transition: none;
+  }
 }
 header#title-block-header .quarto-title-banner::before {
   content: "";
@@ -275,35 +340,6 @@ header#title-block-header .quarto-title-banner::before {
   background-color: var(--overlay-color) !important;
   z-index: 1 !important;
   pointer-events: none !important; /* let clicks through to the banner */
-}
-
-/* Photo list for the carousel. The script at the end of index.qmd loads
-   header_images/header2.jpg ... header20.jpg at run time, which Quarto cannot
-   see; these url()s are what make Quarto copy all 20 photos into _site/, under
-   these exact lowercase names (several source files end in .JPG, and GitHub
-   Pages is case-sensitive). The animation itself is never applied.
-   Do not remove. */
-@keyframes rotateBanner {
-  0%,   5%   { background-image: url('header_images/header1.jpg'); }
-  5%,   10%  { background-image: url('header_images/header2.jpg'); }
-  10%,  15%  { background-image: url('header_images/header3.jpg'); }
-  15%,  20%  { background-image: url('header_images/header4.jpg'); }
-  20%,  25%  { background-image: url('header_images/header5.jpg'); }
-  25%,  30%  { background-image: url('header_images/header6.jpg'); }
-  30%,  35%  { background-image: url('header_images/header7.jpg'); }
-  35%,  40%  { background-image: url('header_images/header8.jpg'); }
-  40%,  45%  { background-image: url('header_images/header9.jpg'); }
-  45%,  50%  { background-image: url('header_images/header10.jpg'); }
-  50%,  55%  { background-image: url('header_images/header11.jpg'); }
-  55%,  60%  { background-image: url('header_images/header12.jpg'); }
-  60%,  65%  { background-image: url('header_images/header13.jpg'); }
-  65%,  70%  { background-image: url('header_images/header14.jpg'); }
-  70%,  75%  { background-image: url('header_images/header15.jpg'); }
-  75%,  80%  { background-image: url('header_images/header16.jpg'); }
-  80%,  85%  { background-image: url('header_images/header17.jpg'); }
-  85%,  90%  { background-image: url('header_images/header18.jpg'); }
-  90%,  95%  { background-image: url('header_images/header19.jpg'); }
-  95%,  100% { background-image: url('header_images/header20.jpg'); }
 }
 
 /* ---- Option G: banner fades into the page ----
@@ -321,32 +357,106 @@ header#title-block-header .quarto-title-banner::after {
   z-index: 1;
 }
 
-/* The banner needs a title to render; hide it */
+/* The banner needs a title to render; hide it. Its (empty) container
+   spans the photo on phones: let taps through to the arrows. */
 .quarto-title-banner .title {
   display: none;
 }
+.quarto-title-banner .quarto-title {
+  pointer-events: none;
+}
 
+/* Arrows: thin chevrons in round, glassy buttons at the photo's sides.
+   The carousel script moves #banner-controls into the banner. They show
+   while the pointer is over the photo or a button has keyboard focus; on
+   touch screens they stay, smaller and fainter. Without JavaScript the
+   carousel does not run, so they are hidden. */
 #banner-controls {
-  text-align: center;
-  margin-top: -2rem;
-  margin-bottom: 1.5rem;
-  z-index: 2;
-  position: relative;
+  grid-column: 1 / -1;            /* the banner is a CSS grid: span all of it */
+  grid-row: 1 / -1;
+  position: absolute;
+  inset: 0;
+  z-index: 2;                     /* above the photo's overlay and fade */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.25rem;
+  pointer-events: none;
+}
+html:not(.js) #banner-controls {
+  display: none;
+}
+.banner-arrow {
+  pointer-events: auto;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: 0;
+  padding: 0;
+  font-size: 1.05rem;
+  color: var(--control-fg);
+  background-color: var(--control-bg);
+  border: 1px solid var(--control-border);
+  border-radius: 50%;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.35s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+.banner-arrow:hover,
+.banner-arrow:focus-visible {
+  color: var(--control-fg-hover);
+  background-color: var(--control-bg-hover);
+  border-color: var(--control-border-hover);
+}
+@media (hover: hover) {
+  header#title-block-header:hover .banner-arrow {
+    opacity: 1;
+  }
+}
+#banner-controls:has(.banner-arrow:focus-visible) .banner-arrow {
+  opacity: 1;
+}
+.banner-arrow:focus-visible {
+  border-radius: 50%;
+}
+@media (hover: none) {
+  #banner-controls {
+    padding: 0 0.6rem;
+  }
+  .banner-arrow {
+    opacity: 0.7;
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 0.9rem;
+    background-color: color-mix(in srgb, var(--control-bg) 73%, transparent);
+    border-color: color-mix(in srgb, var(--control-border) 75%, transparent);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .banner-arrow {
+    transition: none;
+  }
 }
 
-.banner-arrow {
-  background-color: transparent;
-  border: 0px solid var(--control);
-  color: var(--control);
-  font-size: 1.3rem;
-  margin: 0 1.1rem;
-  border-radius: 0.1rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+/* Photo credit: small grey type just under the photo's foot, set flush
+   right like a magazine credit */
+.banner-caption {
+  margin: -62px 0 2.2rem;         /* pulled up across Quarto's gap under the banner */
+  text-align: right;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  line-height: 1.5;
+  color: var(--fg-subtle);
 }
-.banner-arrow:hover {
-  background-color: var(--surface-hover);
-  color: var(--fg-strong);
+/* Quarto's gap under the banner is smaller on narrower screens */
+@media (max-width: 991.98px) {
+  .banner-caption { margin-top: -48px; }
+}
+@media (max-width: 600px) {
+  .banner-caption { margin-top: -45px; }
 }
 
 
@@ -365,7 +475,7 @@ header#title-block-header .quarto-title-banner::after {
 /* ---- Option F: section headings ----
    A short teal rule above Publications / In Progress / Teaching; on wide
    screens the heading stays in view while its section scrolls past. */
-.center-column > section > h3::before {
+.center-column > section > h2::before {
   content: "";
   display: block;
   width: 1.75rem;
@@ -394,7 +504,7 @@ header#title-block-header .quarto-title-banner::after {
 .name-header {
   font-family: var(--font-serif);
   font-size: 2rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.2;
   letter-spacing: -0.01em;
   color: var(--site-fg);
@@ -422,6 +532,22 @@ header#title-block-header .quarto-title-banner::after {
 .icon-links a:hover {
   color: var(--site-fg) !important;
   text-decoration: none !important;
+}
+/* Tablets: the profile spans the full width, so the six links sit in two
+   centred rows of three (with the longer labels, "Google Scholar" and
+   "Harvard Dataverse", one row no longer fits) instead of a tall column
+   that pushes the bio down */
+@media (min-width: 576px) and (max-width: 991.98px) {
+  .icon-links > p {             /* Pandoc wraps the six links in one <p> */
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    justify-content: center;
+    gap: 0.25rem 2.25rem;
+    margin: 0 0 1rem;
+  }
+  .icon-links a {
+    gap: 0.5rem;
+  }
 }
 .icon-links a i,
 .icon-links a .ai {
@@ -455,7 +581,7 @@ header#title-block-header .quarto-title-banner::after {
 }
 .name-header + div em {
   font-style: normal;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 600;
   line-height: 2;
   letter-spacing: 0.12em;
@@ -478,8 +604,8 @@ header#title-block-header .quarto-title-banner::after {
   gap: 2rem 2.5rem;
   margin-top: 2.2rem;
 }
-.facts-block > h3,
-.facts-block > section > h3 {
+.facts-block > h2,
+.facts-block > section > h2 {
   margin: 0 0 0.9rem;
 }
 .facts ul,
@@ -520,7 +646,7 @@ header#title-block-header .quarto-title-banner::after {
   align-items: center;
   gap: 0.8rem;
   padding: 0.55rem 0;
-  font-size: 1.02rem;
+  font-size: 1rem;
   color: var(--site-fg);
   border-bottom: 1px solid var(--rule);
 }
@@ -594,8 +720,8 @@ header#title-block-header .quarto-title-banner::after {
 .facts .edu-inst {
   order: -1;
   font-family: var(--font-serif);
-  font-size: 1.02rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 500;
   color: var(--site-fg);
 }
 .facts .edu-degree {
@@ -615,7 +741,7 @@ header#title-block-header .quarto-title-banner::after {
   display: inline-block;
   margin-left: 0.15em;
   padding: 0 0.5em;
-  font-size: 0.78rem;
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.03em;
   line-height: 1.6;
@@ -765,7 +891,7 @@ html.cv-open {
 .cv-dialog__body {
   position: relative;
   flex: 1;
-  background-color: var(--pdf-bg);
+  background-color: var(--surface);
 }
 .cv-dialog__hint {
   position: absolute;
@@ -778,7 +904,43 @@ html.cv-open {
   text-align: center;
   font-size: 0.9rem;
   line-height: 1.7;
-  color: var(--pdf-hint);
+  color: var(--fg-muted);
+}
+/* While the PDF loads: a thin teal bar running along the top (still with
+   reduced motion). cv-viewer.js adds .is-loaded when the frame has loaded. */
+.cv-dialog__progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 1;
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--link-color) 18%, transparent);
+}
+.cv-dialog__progress::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 30%;
+  background-color: var(--link-color);
+  animation: cv-progress 1.1s ease-in-out infinite;
+}
+.cv-dialog.is-loaded .cv-dialog__progress {
+  display: none;
+}
+@keyframes cv-progress {
+  from { left: -30%; }
+  to   { left: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cv-dialog__progress::before {
+    animation: none;
+    left: 0;
+    width: 100%;
+    opacity: 0.6;
+  }
 }
 .cv-dialog__frame {
   position: absolute;
@@ -810,85 +972,58 @@ html.cv-open {
 /* ============================================================
    Publications
    ============================================================ */
-/* Co-author links: text color, dotted underline, accent on hover */
+/* Co-author links: in the text colour, no underline at rest; teal and
+   underlined on hover, like the other links */
 .coauthor-link {
   color: var(--site-fg) !important;
-  text-decoration: none;
-  border-bottom: 1px dotted var(--rule-dotted);
-  transition: border-color 0.15s ease-in-out, color 0.15s ease-in-out;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: color 0.15s ease-in-out, text-decoration-color 0.15s ease-in-out;
 }
 .coauthor-link:hover {
   color: var(--link-color) !important;
-  border-bottom-color: var(--link-color);
+  text-decoration-color: currentColor;
 }
 
-/* Abstract toggles (title = summary) */
-details summary {
-  cursor: pointer;
-  font-weight: 500;
-  margin-top: 0.7rem;
-  line-height: 1.4;
-}
-/* Paper titles: serif, set in the same weight as the headings */
-details summary strong,
-details summary > span {
+/* Paper titles: serif, set in the same weight as the headings (500) */
+.pub-title strong,
+.pub-title > span {
   font-family: var(--font-serif);
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.003em;
 }
 /* Abstract text */
-main details > div {
+main .abstract {
   line-height: 1.6;
 }
-details summary::after {
-  content: " +";
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-left: 0.5rem;
-}
-details[open] summary::after {
-  content: " −";
-}
-summary {
-  list-style: none;
-}
-summary::-webkit-details-marker {
-  display: none;
-}
 
-/* Link chips (Online Appendix, Replication, ...) */
+/* Link chips (Online Appendix, Replication, ...): all the same grey
+   outline (the colour classes in index.qmd, flat-button-amber etc., no
+   longer change anything); teal on hover and keyboard focus */
 .flat-button {
   display: inline-block;
-  background-color: var(--surface);
-  color: var(--site-fg);
+  color: var(--btn-fg) !important;
+  background-color: transparent;
   padding: 0.15em 0.6em;
   font-size: 0.7rem;
   text-decoration: none;
   margin-right: 0.4rem;
   margin-bottom: 0.3rem;
-  border: 0.5px solid var(--link-color);
-  border-radius: 0.35rem;
-  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  border: 1px solid var(--btn-border);
+  border-radius: 4px;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: 0.01em;
   font-weight: 400;
 }
-.flat-button:hover {
-  background-color: var(--surface-hover);
-  border-color: var(--border-hover);
-  color: var(--fg-strong);
+.flat-button:hover,
+.flat-button:focus-visible {
+  color: var(--link-color) !important;
+  border-color: var(--link-color);
+  background-color: var(--btn-hover-bg);
 }
-
-.flat-button-amber       { border-color: var(--chip-amber-border); color: var(--chip-amber-text) !important; }
-.flat-button-amber:hover { border-color: var(--chip-amber-text);   color: var(--chip-amber-hover) !important; }
-.flat-button-rose        { border-color: var(--chip-rose-border);  color: var(--chip-rose-text) !important; }
-.flat-button-rose:hover  { border-color: var(--chip-rose-text);    color: var(--chip-rose-hover) !important; }
-.flat-button-blue        { border-color: var(--chip-blue-border);  color: var(--chip-blue-text) !important; }
-.flat-button-blue:hover  { border-color: var(--chip-blue-text);    color: var(--chip-blue-hover) !important; }
-.flat-button-lime        { border-color: var(--chip-lime-border);  color: var(--chip-lime-text) !important; }
-.flat-button-lime:hover  { border-color: var(--chip-lime-text);    color: var(--chip-lime-hover) !important; }
-.flat-button-slate       { border-color: var(--chip-slate-border); color: var(--chip-slate-text) !important; }
-.flat-button-slate:hover { border-color: var(--chip-slate-text);   color: var(--site-fg) !important; }
 
 
 /* ------------------------------------------------------------
@@ -913,14 +1048,24 @@ div.columns:has(> .column > #publications) > .column > div.columns > .column > d
   display: none;
 }
 
-/* Title: the largest thing in each entry; still the DOI link */
-div.columns:has(> .column > #publications) details > summary {
-  margin-top: 0;
-  font-size: 1.1rem !important;
+/* Title: the largest thing in each entry; a plain link to the DOI.
+   Only the small "Abstract" pill after it opens and closes the abstract
+   (abstracts.js; without JavaScript every abstract stays open). */
+.pub-title {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
   line-height: 1.35;
 }
-div.columns:has(> .column > #publications) details > summary a,
-.progress-card details > summary > span {
+.pub-title:has(+ .abstract.is-open) {
+  margin-bottom: 0;
+}
+.progress-card .pub-title {        /* same size, leading and spacing as a paper title */
+  margin-top: 0;
+  font-size: 1.1rem;
+  line-height: 1.35;
+}
+div.columns:has(> .column > #publications) .pub-title a,
+.progress-card .pub-title > span {
   color: var(--site-fg) !important;
   text-decoration: underline;
   text-decoration-color: transparent;
@@ -928,16 +1073,13 @@ div.columns:has(> .column > #publications) details > summary a,
   text-underline-offset: 0.18em;
   transition: color 0.15s ease-in-out, text-decoration-color 0.15s ease-in-out;
 }
-div.columns:has(> .column > #publications) details > summary a:hover {
+div.columns:has(> .column > #publications) .pub-title a:hover {
   color: var(--link-color) !important;
   text-decoration-color: currentColor;
   opacity: 1 !important;
 }
 
-/* The "+" after the title becomes a small "Abstract" toggle label */
-div.columns:has(> .column > #publications) details > summary::after,
-.progress-card details > summary::after {
-  content: "Abstract \25BE";
+.abstract-toggle {
   display: inline-block;
   vertical-align: 0.2em;
   margin-left: 0.6rem;
@@ -949,40 +1091,61 @@ div.columns:has(> .column > #publications) details > summary::after,
   letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
-  color: var(--fg-muted);
-  border: 1px solid var(--rule);
+  color: var(--btn-fg);
+  background: none;
+  border: 1px solid var(--btn-border);
   border-radius: 999px;
-  transition: color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  cursor: pointer;
+  transition: color 0.15s ease-in-out, border-color 0.15s ease-in-out, background-color 0.15s ease-in-out;
 }
-div.columns:has(> .column > #publications) details[open] > summary::after,
-.progress-card details[open] > summary::after {
-  content: "Abstract \25B4";
+/* On a line of its own (abstracts.js marks it): flush left, with room
+   above so it does not touch the title */
+.abstract-toggle.on-own-line {
+  display: block;
+  width: fit-content;
+  margin: 0.55rem 0 0.1rem;
+}
+.abstract-toggle::after {
+  content: " \25BE";
+}
+.abstract-toggle[aria-expanded="true"]::after {
+  content: " \25B4";
+}
+.abstract-toggle[aria-expanded="true"] {
   color: var(--site-fg);
   border-color: var(--fg-subtle);
 }
-div.columns:has(> .column > #publications) details > summary:hover::after,
-.progress-card details > summary:hover::after {
-  color: var(--site-fg);
-  border-color: var(--fg-subtle);
+.abstract-toggle:hover,
+.abstract-toggle:focus-visible {
+  color: var(--link-color);
+  border-color: var(--link-color);
+  background-color: var(--btn-hover-bg);
+}
+/* No JavaScript: the abstracts are simply shown, so the pill has no job */
+html:not(.js) .abstract-toggle {
+  display: none;
 }
 
 /* Abstract text: set off with a rule, kept to the reading measure */
-div.columns:has(> .column > #publications) details > div,
-.progress-card details > div {
-  margin: 0.7rem 0 0.9rem !important;
+.abstract {
+  margin: 0.7rem 0 1rem;
   padding-left: 0.9rem;
   border-left: 2px solid var(--rule);
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   line-height: 1.6;
+  color: var(--fg-muted);
 }
-div.columns:has(> .column > #publications) details > div p:last-child {
+html.js .abstract:not(.is-open) {
+  display: none;
+}
+.abstract p:last-child {
   margin-bottom: 0;
 }
 
 /* Meta: authors on the first line, then "Journal, volume (date)" in muted text */
 div.columns:has(> .column > #publications) .column > ul {
   margin: 0.45rem 0 0.75rem;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   line-height: 1.5;
 }
 div.columns:has(> .column > #publications) .column > ul i.bi {
@@ -1012,15 +1175,14 @@ div.columns:has(> .column > #publications) .column > ul li:nth-child(3)::after {
 div.columns:has(> .column > #publications) .column > p:has(> .flat-button) {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 0.35rem;
   margin: 0;
 }
 div.columns:has(> .column > #publications) .flat-button {
   margin: 0;
-  padding: 0.2em 0.65em;
-  font-size: 0.72rem;
+  padding: 0.16em 0.62em;
+  font-size: 0.7rem;
   line-height: 1.5;
-  border-width: 1px;
 }
 
 /* Covers: same width, top-aligned with the title. Their own proportions
@@ -1035,20 +1197,20 @@ div.columns:has(> .column > #publications) .center-column img {
   height: auto;
   margin: 0.2rem 0 0 auto !important;
   border-radius: 3px !important;
-  box-shadow: var(--cover-shadow) !important;
+  box-shadow: none !important;
   outline: 1px solid var(--cover-edge);
-  outline-offset: -1px;
+  outline-offset: 0;
 }
 
-/* Co-author names: keep the dotted underline off the spaces inside the links */
+/* Co-author names: keep the underline off the spaces inside the links */
 .coauthor-link {
   display: inline-block;
 }
 
 /* ---- Option D: publication hover ----
-   On devices with a pointer, the entry under it gets a faint panel and
-   its cover lifts slightly. The panel is drawn with a spread shadow, so
-   nothing in the layout moves. */
+   On devices with a pointer, the entry under it gets a faint panel (drawn
+   with a spread shadow, so nothing in the layout moves). The cover stays
+   put. */
 @media (hover: hover) {
   div.columns:has(> .column > #publications) > .column > div.columns {
     border-radius: 6px;
@@ -1058,23 +1220,92 @@ div.columns:has(> .column > #publications) .center-column img {
     background-color: var(--surface);
     box-shadow: 0 0 0 0.9rem var(--surface);
   }
-  div.columns:has(> .column > #publications) > .column > div.columns .center-column img {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  div.columns:has(> .column > #publications) > .column > div.columns:hover .center-column img {
-    transform: translateY(-3px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35), 0 10px 22px rgba(0, 0, 0, 0.35) !important;
-  }
 }
 @media (prefers-reduced-motion: reduce) {
-  div.columns:has(> .column > #publications) > .column > div.columns,
-  div.columns:has(> .column > #publications) > .column > div.columns .center-column img {
+  div.columns:has(> .column > #publications) > .column > div.columns {
     transition: none;
   }
-  div.columns:has(> .column > #publications) > .column > div.columns:hover .center-column img {
-    transform: none;
+}
+
+/* ------------------------------------------------------------
+   Year column: the year of each paper sits in a narrow column to the left
+   of the entry, shown on the first paper of each year only (the rows carry
+   .pub, and data-year on those first rows). The year leaves the date line,
+   which keeps volume, issue and month; for screen readers the year stays
+   in the date (.pub-y is visually hidden) and the column is decoration.
+   The other sections below the profile start at the same left edge, with
+   the year column left empty.
+   ------------------------------------------------------------ */
+:root {
+  --year-col: 4.5rem;
+}
+.pub-y {                          /* in the date line: read, not shown */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+@media (min-width: 601px) {
+  div.columns.pub {
+    display: grid !important;
+    grid-template-columns: var(--year-col) minmax(0, 1fr) 15%;
+    align-items: start;
+  }
+  div.columns.pub::before {
+    content: attr(data-year);
+    content: attr(data-year) / "";
+    grid-column: 1;
+    grid-row: 1;
+    padding-top: 0.28rem;         /* on the title's first baseline */
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.35;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums lining-nums;
+    color: var(--fg-subtle);
+  }
+  div.columns.pub > .column {
+    width: auto !important;
+    margin: 0;
+  }
+  div.columns.pub > .column:first-child {
+    grid-column: 2;
+    grid-row: 1;
+    margin-right: 2.5rem;
+  }
+  div.columns.pub > .column.center-column {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .in-progress,
+  .dataset-card,
+  .teaching,
+  .contact {
+    margin-left: var(--year-col);
   }
 }
+/* Phones: the year is a small heading above the first paper of its year,
+   so it takes no width from the text */
+@media (max-width: 600px) {
+  div.columns.pub {
+    flex-wrap: wrap;
+    row-gap: 0 !important;
+  }
+  div.columns.pub[data-year]::before {
+    content: attr(data-year);
+    content: attr(data-year) / "";
+    flex: 0 0 100%;
+    margin: 0 0 0.55rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums lining-nums;
+    color: var(--fg-subtle);
+  }
+}
+
 
 /* ============================================================
    In Progress
@@ -1082,7 +1313,7 @@ div.columns:has(> .column > #publications) .center-column img {
 /* Small uppercase labels, shared with the institution names in Teaching */
 .progress-section-title,
 .inst-name {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: var(--fg-muted);
   text-transform: uppercase;
@@ -1095,31 +1326,19 @@ div.columns:has(> .column > #publications) .center-column img {
   margin-top: 2.2rem;
 }
 
-/* Cards: hairline border on a slightly raised surface */
-.progress-card,
-.other-projects-list,
-.inst-card {
-  border: 1px solid var(--rule);
-  border-radius: 6px;
-  background-color: var(--surface);
-}
-.progress-card {
-  padding: 1rem 1.2rem;
-}
-.other-projects-list {
-  padding: 0.2rem 1.2rem;
-}
+/* No cards: the working paper sits on the page like a publication, and
+   the other projects are a list between hairlines */
 .other-project-row {
-  font-size: 0.98rem;
+  font-size: 1rem;
   color: var(--site-fg);
   padding: 0.6rem 0;
-  border-bottom: 1px solid var(--rule-soft);
+  border-bottom: 1px solid var(--rule);
   display: flex;
   align-items: center;
   gap: 8px;
 }
-.other-project-row:last-child {
-  border-bottom: none;
+.other-project-row:first-child {
+  border-top: 1px solid var(--rule);
 }
 .other-project-authors {
   font-size: 1rem;
@@ -1132,7 +1351,7 @@ div.columns:has(> .column > #publications) .center-column img {
 
 .status {
   display: inline-block;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.02em;
   line-height: 1.5;
@@ -1146,7 +1365,7 @@ div.columns:has(> .column > #publications) .center-column img {
   border-color: var(--fg-muted);
 }
 .coauth {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: var(--site-fg);
   margin-top: 0.45rem;
 }
@@ -1170,17 +1389,17 @@ div.columns:has(> .column > #publications) .center-column img {
   margin-top: 2.2rem;
 }
 .inst-period {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--fg-muted);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
-.inst-card {
-  padding: 0.9rem 1.2rem 0.3rem;
+.inst-card {                      /* no frame: the timeline carries the structure */
+  padding: 0.2rem 0 0;
 }
 .role-badge {
   display: inline-block;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.02em;
   line-height: 1.5;
@@ -1198,14 +1417,12 @@ div.columns:has(> .column > #publications) .center-column img {
   justify-content: space-between;
   align-items: baseline;
   gap: 1rem;
-  font-size: 0.98rem;
+  font-size: 1rem;
   color: var(--site-fg);
-  padding: 0.05rem 0 0.05rem 0.75rem;
-  border-left: 2px solid var(--rule);
-  margin: 0 0 0.6rem 2px;
+  margin: 0 0 0.6rem;
 }
 .course-sem {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--fg-muted);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
@@ -1223,9 +1440,9 @@ div.columns:has(> .column > #publications) .center-column img {
   display: inline-flex;
   align-items: center;
   gap: 0.45em;
-  color: var(--chip-amber-text);
-  border-color: color-mix(in srgb, var(--chip-amber-text) 45%, transparent);
-  background-color: color-mix(in srgb, var(--chip-amber-text) 8%, transparent);
+  color: var(--btn-fg);
+  border-color: var(--btn-border);
+  background: none;
 }
 .status-dot {
   width: 0.45rem;
@@ -1233,8 +1450,8 @@ div.columns:has(> .column > #publications) .center-column img {
   border-radius: 50%;
   background-color: currentColor;
 }
-.status-line {
-  margin-top: 0.6rem;
+.status-line {                     /* as far below the authors as the paper links are */
+  margin-top: 0.75rem;
 }
 .other-project-authors .bi {
   color: var(--fg-subtle);
@@ -1249,8 +1466,11 @@ div.columns:has(> .column > #publications) .center-column img {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+/* Course code and name in two columns, so a wrapped name stays aligned */
 .course-title {
-  display: inline;
+  display: grid;
+  grid-template-columns: 5.2rem minmax(0, 1fr);
+  align-items: baseline;
 }
 .role-group + .role-group {
   margin-top: 0.8rem;
@@ -1297,17 +1517,11 @@ div.columns:has(> .column > #publications) .center-column img {
   background-color: var(--fg-muted);
   border-color: var(--fg-muted);
 }
-.teaching .course-code {
-  display: inline-block;
-  margin-right: 0.55em;
-  padding: 0.02em 0.45em;
-  font-size: 0.74rem;
+.teaching .course-code {           /* plain grey figures, no frame */
+  font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.03em;
-  vertical-align: 0.1em;
-  color: var(--fg-muted);
-  border: 1px solid var(--rule);
-  border-radius: 4px;
+  color: var(--fg-subtle);
   font-variant-numeric: tabular-nums;
 }
 
@@ -1323,7 +1537,7 @@ div.columns:has(> .column > #publications) .center-column img {
   border-radius: 8px;
 }
 .dataset-kicker {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1332,18 +1546,18 @@ div.columns:has(> .column > #publications) .center-column img {
 .dataset-title {
   margin: 0.2rem 0 0.35rem;
   font-family: var(--font-serif);
-  font-size: 1.35rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 500;
   color: var(--site-fg);
 }
 .dataset-paper {
   margin: 0 0 0.7rem;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   color: var(--fg-muted);
 }
 .dataset-desc {
   margin: 0 0 1.05rem;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   line-height: 1.6;
 }
 .dataset-actions {
@@ -1356,7 +1570,7 @@ div.columns:has(> .column > #publications) .center-column img {
   align-items: center;
   gap: 0.5em;
   padding: 0.45rem 1rem;
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   line-height: 1.4;
@@ -1364,27 +1578,20 @@ div.columns:has(> .column > #publications) .center-column img {
   border-radius: 6px;
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, color 0.15s ease-in-out;
 }
-/* Both are outlined; the icon tells them apart (download vs arrow) */
-.data-btn-download {
-  color: var(--site-fg) !important;
-  background-color: transparent;
-  border: 1px solid var(--fg-subtle);
-}
-.data-btn-download:hover {
-  color: var(--fg-strong) !important;
-  border-color: var(--site-fg);
-  background-color: var(--surface-hover);
-}
-/* Explore looks exactly like Download; the arrow tells them apart */
+/* Both are outlined in the button grey; the icon tells them apart
+   (download vs arrow). Teal on hover and keyboard focus. */
+.data-btn-download,
 .data-btn-explore {
-  color: var(--site-fg) !important;
+  color: var(--btn-fg) !important;
   background-color: transparent;
-  border: 1px solid var(--fg-subtle);
+  border: 1px solid var(--btn-border);
 }
-.data-btn-explore:hover {
-  color: var(--fg-strong) !important;
-  border-color: var(--site-fg);
-  background-color: var(--surface-hover);
+.data-btn-download:hover,
+.data-btn-explore:hover,
+.data-btn:focus-visible {
+  color: var(--link-color) !important;
+  border-color: var(--link-color);
+  background-color: var(--btn-hover-bg);
 }
 .data-btn .bi-arrow-right {
   transition: transform 0.15s ease-in-out;
@@ -1419,7 +1626,7 @@ div.columns:has(> .column > #publications) .center-column img {
   align-items: center;
   gap: 0.45em;
   margin-bottom: 0.25rem;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1475,7 +1682,7 @@ div.columns:has(> .column > #publications) .center-column img {
    (index.qmd is left as is, so its inline style="" colors are
    matched by value and overridden here)
    ============================================================ */
-main [style*="color: #aaa"] {            /* icons, institutions, abstracts, footer */
+main [style*="color: #aaa"] {            /* icons, institutions, abstracts */
   color: var(--fg-muted) !important;
 }
 main [style*="color:#555"] {             /* author icons in Other Projects */
@@ -1483,9 +1690,6 @@ main [style*="color:#555"] {             /* author icons in Other Projects */
 }
 main [style*="color: #80cbc4"] {         /* working-paper title */
   color: var(--link-color) !important;
-}
-main [style*="color: #484848"] {         /* banner photo caption */
-  color: var(--fg-subtle) !important;
 }
 main hr[style*="#444"] {                 /* section dividers and the footer rule: 1px hairlines */
   border: 0 !important;
@@ -1497,10 +1701,14 @@ main hr[style*="#444"] {                 /* section dividers and the footer rule
 /* ============================================================
    Footer
    ============================================================ */
-footer {
+footer {                          /* one quiet line of small grey type */
   position: relative;
   width: 100%;
-  padding: 1rem 0;
+  margin-top: 1rem;
+  padding: 1rem 0 2rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--fg-subtle);
 }
 
 
@@ -1555,9 +1763,8 @@ main [id] {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -2px;
-  height: 2px;
-  border-radius: 1px;
+  bottom: -3px;
+  height: 1px;                    /* a hairline: the current section, quietly */
   background-color: var(--link-color);
   transform: scaleX(0);
   transform-origin: left center;
@@ -1613,19 +1820,8 @@ main [id] {
     flex-direction: column;
     gap: 0.05rem;
   }
-
-  /* Footer: keep "mountains - text - mountains" on one row; the text
-     wraps between the (smaller) images instead of pushing one below */
-  footer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-  }
-  footer img {
-    height: 3.4rem !important;
-    margin: 0 !important;
-    flex: 0 0 auto;
+  .course-sem {                   /* under the course name, not the code */
+    padding-left: 5.2rem;
   }
 
   /* Publications: cover as a small thumbnail beside the text */
@@ -1649,13 +1845,6 @@ main [id] {
   div.columns:has(> .column > #publications) .center-column img {
     max-width: 64px;
     margin: 0.25rem 0 0 !important;
-  }
-
-  /* Banner caption: on narrow screens its right-aligned line runs into
-     the centered arrows, so center it just below them instead */
-  main [style*="color: #484848"] {
-    margin-top: -1.1rem !important;
-    text-align: center !important;
   }
 }
 
@@ -1694,12 +1883,11 @@ main [id] {
    5. Navbar: translucent hairline underneath
    6. Native scrollbars / form controls follow the dark theme; text
       selection uses the teal
-   7. Link chips carry a whisper of their own colour
-   8. Journal covers: slightly deeper, softer shadow
+   7. (was: link chips in their own colours; now grey, see Buttons)
+   8. (was: deeper cover shadow; now a hairline, no shadow)
    ============================================================ */
 :root {
   --rule: rgba(255, 255, 255, 0.075);
-  --rule-soft: rgba(255, 255, 255, 0.05);
   --divider: rgba(255, 255, 255, 0.11);
   --radius-card: 10px;
   --radius-control: 6px;
@@ -1714,18 +1902,13 @@ main [id] {
   background-color: color-mix(in srgb, var(--link-color) 38%, transparent);
 }
 
-/* 2-3. Raised surfaces */
-.progress-card,
-.other-projects-list,
-.inst-card,
+/* 2-3. Raised surfaces (the dataset card and the map; In Progress and
+   Teaching have no cards) */
 .dataset-card,
 .contact-map {
   background-image: var(--surface-sheen);
   box-shadow: var(--surface-shadow);
 }
-.progress-card,
-.other-projects-list,
-.inst-card,
 .dataset-card,
 .contact-map {
   border-radius: var(--radius-card);
@@ -1749,26 +1932,18 @@ main hr[style*="#444"] {
   box-shadow: 0 1px 0 var(--rule);
 }
 
-/* 7. Chips: a faint wash of their own colour */
-.flat-button {
-  background-color: color-mix(in srgb, currentColor 5%, transparent);
-}
-.flat-button:hover {
-  background-color: color-mix(in srgb, currentColor 11%, transparent);
-}
 
-/* 8. Covers */
-div.columns:has(> .column > #publications) .center-column img {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 28px -10px rgba(0, 0, 0, 0.6) !important;
-}
+/* 8. Covers: a hairline, no shadow (see the Publication list layout) */
 
 
 /* ============================================================
    Colour rule: where teal appears
    Teal marks what is interactive or current, and nothing else:
      1. links inside running text (biography, contact)
-     2. hover on paper titles, co-author names and the profile links
-        (Email, Scholar, ORCID, OSF, Dataverse, X: icon and label)
+     2. hover (and keyboard focus) on paper titles, co-author names, the
+        profile links (Email, Google Scholar, ORCID, OSF, Harvard
+        Dataverse, X: icon and label) and every button (publication links,
+        Abstract, dataset actions), which are grey at rest
      3. the current state: navbar underline, the current Education entry,
         keyboard focus ring, text selection
      4. the one primary action: the CV button
@@ -1822,4 +1997,24 @@ div.columns:has(> .column > #publications) .center-column img {
 .dataset-paper a:hover {
   color: var(--link-color) !important;
   text-decoration-color: currentColor;
+}
+
+
+/* ============================================================
+   Accessibility: skip link (skip-link.html), shown only on keyboard focus
+   ============================================================ */
+.skip-link {
+  position: absolute;
+  z-index: 3000;
+  top: 0.5rem;
+  left: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  color: var(--site-fg) !important;
+  background-color: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  transform: translateY(-200%);
+}
+.skip-link:focus {
+  transform: none;
 }

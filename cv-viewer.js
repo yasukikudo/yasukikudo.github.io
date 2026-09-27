@@ -34,12 +34,14 @@
             <i class="bi bi-x-lg" aria-hidden="true"></i></button>
         </div>
         <div class="cv-dialog__body">
-          <p class="cv-dialog__hint">Loading the CV&hellip;<br>
-            If it does not appear here, use <strong>Download</strong> or <strong>New tab</strong> above.</p>
+          <div class="cv-dialog__progress" aria-hidden="true"></div>
+          <p class="cv-dialog__hint">If it does not appear here, use <strong>Download</strong> or <strong>New tab</strong> above.</p>
           <iframe class="cv-dialog__frame" title="Curriculum Vitae (PDF)"></iframe>
         </div>
       </div>`;
     frame = dialog.querySelector("iframe");
+    // Loading state: the thin bar (styles.css) goes once the PDF frame loads
+    frame.addEventListener("load", () => { if (frame.src) dialog.classList.add("is-loaded"); });
     dialog.querySelector(".cv-dialog__close").addEventListener("click", () => dialog.close());
     // A click on the dimmed area outside the panel closes the viewer.
     dialog.addEventListener("click", (event) => {
@@ -56,7 +58,12 @@
 
   const open = () => {
     if (!dialog) build();
-    if (!frame.src) frame.src = viewUrl;       // load the PDF on first open only
+    if (!frame.src) {                          // load the PDF on first open only
+      frame.src = viewUrl;
+      // where the browser downloads the PDF instead of showing it, the frame
+      // may never report "load": stop the bar after 15s (the hint stays)
+      setTimeout(() => dialog.classList.add("is-loaded"), 15000);
+    }
     savedScroll = window.scrollY;
     document.documentElement.classList.add("cv-open");  // lock the page behind
     dialog.showModal();
