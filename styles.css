@@ -1278,6 +1278,7 @@ div.columns:has(> .column > #publications) .center-column img {
   .in-progress,
   .dataset-card,
   .teaching,
+  .tools,
   .contact {
     margin-left: var(--year-col);
   }
@@ -1598,6 +1599,68 @@ div.columns:has(> .column > #publications) .center-column img {
   .data-btn-explore:hover .bi-arrow-right {
     transform: none;
   }
+}
+
+
+/* ------------------------------------------------------------
+   Tools: small apps made for fun, kept quiet. A one-line note, then two
+   rows between hairlines (as Other Projects): the app's icon and name are
+   one link; the one-line description sits under the name. The icons'
+   dark tiles are close to the page, so they get a hairline edge.
+   ------------------------------------------------------------ */
+.tools {
+  --tool-icon: 36px;
+}
+.tools-note {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+}
+.tools-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.tool {
+  position: relative;
+  min-height: calc(var(--tool-icon) + 1.5rem);
+  padding: 0.75rem 0 0.75rem calc(var(--tool-icon) + 0.9rem);
+  border-bottom: 1px solid var(--rule);
+  line-height: 1.45;
+}
+.tool:first-child {
+  border-top: 1px solid var(--rule);
+}
+.tool-icon {                      /* inside the link, so the icon is clickable too */
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: var(--tool-icon);
+  height: var(--tool-icon);
+  transform: translateY(-50%);
+  border-radius: 22%;             /* the tiles' own corner (112.5 / 512) */
+  outline: 1px solid var(--divider);
+  outline-offset: -1px;
+}
+.tool-link {
+  color: var(--site-fg) !important;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: color 0.15s ease-in-out, text-decoration-color 0.15s ease-in-out;
+}
+.tool-link:hover {
+  color: var(--link-color) !important;
+  text-decoration-color: currentColor;
+}
+.tool-name {
+  font-size: 1rem;
+}
+.tool-desc {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--fg-muted);
 }
 
 
