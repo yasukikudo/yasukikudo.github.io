@@ -536,17 +536,19 @@ html:not(.js) #banner-controls {
   color: var(--site-fg) !important;
   text-decoration: none !important;
 }
-/* Tablets: the profile spans the full width, so the six links sit in two
-   centred rows of three (with the longer labels, "Google Scholar" and
-   "Harvard Dataverse", one row no longer fits) instead of a tall column
-   that pushes the bio down */
+/* Tablets: the profile spans the full width, so the seven links sit in
+   two centred rows instead of a tall column that pushes the bio down: 4 + 3
+   (Email, Google Scholar, ORCID, OSF / Harvard Dataverse, GitHub, X). The
+   row is capped at 30rem, so the fifth link always wraps; 3 + 3 + 1 left X
+   alone on a third row. */
 @media (min-width: 576px) and (max-width: 991.98px) {
-  .icon-links > p {             /* Pandoc wraps the six links in one <p> */
-    display: grid;
-    grid-template-columns: repeat(3, max-content);
+  .icon-links > p {             /* Pandoc wraps the links in one <p> */
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 0.25rem 2.25rem;
-    margin: 0 0 1rem;
+    gap: 0.25rem 2rem;
+    max-width: 30rem;
+    margin: 0 auto 1rem;
   }
   .icon-links a {
     gap: 0.5rem;
@@ -1603,64 +1605,122 @@ div.columns:has(> .column > #publications) .center-column img {
 
 
 /* ------------------------------------------------------------
-   Tools: small apps made for fun, kept quiet. A one-line note, then two
-   rows between hairlines (as Other Projects): the app's icon and name are
-   one link; the one-line description sits under the name. The icons'
-   dark tiles are close to the page, so they get a hairline edge.
+   Tools: small apps made for fun, kept quiet, laid out like a phone's
+   home screen. The note and a hairline (full width, left-aligned), then
+   the two apps centred in the column: icon, name, a one-line description and an "Open"
+   button with the GitHub mark. Each app is a single link (aria-label says
+   where it goes); the button is only a look (a span), so nothing is nested.
+   The columns stretch to the same height and the buttons sit at the
+   bottom, so they line up whatever the descriptions' length.
    ------------------------------------------------------------ */
 .tools {
-  --tool-icon: 36px;
+  --tool-icon: 64px;
+  --tool-col: 9.5rem;
 }
 .tools-note {
   margin: 0 0 0.75rem;
   font-size: 0.9rem;
   color: var(--fg-muted);
 }
-.tools-list {
+.tools-grid {
   list-style: none;
   margin: 0;
-  padding: 0;
-}
-.tool {
-  position: relative;
-  min-height: calc(var(--tool-icon) + 1.5rem);
-  padding: 0.75rem 0 0.75rem calc(var(--tool-icon) + 0.9rem);
-  border-bottom: 1px solid var(--rule);
-  line-height: 1.45;
-}
-.tool:first-child {
+  padding: 1.5rem 0 0;
   border-top: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, var(--tool-col)));
+  column-gap: 1.75rem;
+  justify-content: center;        /* the two apps sit in the middle of the column;
+                                     the note and the hairline stay full width */
 }
-.tool-icon {                      /* inside the link, so the icon is clickable too */
-  position: absolute;
-  left: 0;
-  top: 50%;
+.tools-grid > li {
+  display: flex;
+}
+.tool-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0.25rem 0.25rem 0.5rem;
+  border-radius: var(--radius-card);
+  color: var(--site-fg) !important;
+  text-decoration: none !important;
+}
+.tool-card:focus-visible {
+  border-radius: var(--radius-card);   /* the focus ring follows the card */
+}
+.tool-icon {
   width: var(--tool-icon);
   height: var(--tool-icon);
-  transform: translateY(-50%);
   border-radius: 22%;             /* the tiles' own corner (112.5 / 512) */
-  outline: 1px solid var(--divider);
+  outline: 1px solid var(--divider);   /* the dark tile is close to the page */
   outline-offset: -1px;
 }
-.tool-link {
-  color: var(--site-fg) !important;
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
-  transition: color 0.15s ease-in-out, text-decoration-color 0.15s ease-in-out;
-}
-.tool-link:hover {
-  color: var(--link-color) !important;
-  text-decoration-color: currentColor;
-}
 .tool-name {
+  margin-top: 0.75rem;
   font-size: 1rem;
+  line-height: 1.35;
+  color: var(--site-fg);
+  transition: color 0.15s ease-in-out;
 }
 .tool-desc {
-  display: block;
-  font-size: 0.9rem;
+  margin: 0.3rem 0 1rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
   color: var(--fg-muted);
+}
+/* The "Open" button: an outline in the button grey with the dataset
+   buttons' corners (6px), type and height. The GitHub mark fills its whole
+   16-unit box (the Bootstrap icons do not), so it is set a little smaller
+   (0.9em) to read as large as the Download icon, with the same gap (0.5em)
+   and a little more air at the sides (1.1rem) so it does not look cramped. */
+.tool-open {
+  margin-top: auto;               /* to the bottom of the column: both buttons line up */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.45rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  color: var(--btn-fg);
+  border: 1px solid var(--btn-border);
+  border-radius: var(--radius-control);   /* 6px, as the dataset buttons */
+  transition: color 0.15s ease-in-out, border-color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+}
+.tool-open .gh-mark {
+  width: 0.9em;
+  height: 0.9em;
+  flex-shrink: 0;
+}
+.tool-card:hover .tool-name,
+.tool-card:focus-visible .tool-name {
+  color: var(--link-color);
+}
+.tool-card:hover .tool-open,
+.tool-card:focus-visible .tool-open {
+  color: var(--link-color);
+  border-color: var(--link-color);
+  background-color: var(--btn-hover-bg);
+}
+/* Phones: still two columns, a little smaller */
+@media (max-width: 600px) {
+  .tools {
+    --tool-icon: 56px;
+  }
+  .tools-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1rem;
+  }
+  .tool-name {
+    font-size: 0.9rem;
+  }
+  .tool-open {                    /* phones: one step smaller, in scale with the column */
+    padding: 0.35rem 0.95rem;
+    font-size: 0.8rem;
+  }
 }
 
 
@@ -2016,6 +2076,24 @@ main hr[style*="#444"] {
 }
 .navbar .nav-link[href*="#"]:hover {
   color: var(--site-fg) !important;
+}
+/* GitHub: the Octicons mark-github (MIT) as inline SVG, in the same
+   1.2 x 2rem box as the font icons; grey, teal on hover like them */
+.icon-links a .gh-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.2rem;
+  height: 2rem;
+  color: var(--fg-muted);
+}
+.icon-links a .gh-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+.icon-links a:hover .gh-icon {
+  color: var(--link-color);
 }
 /* Icons in the profile list and in Contact: neutral */
 .icon-links a i,
